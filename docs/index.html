@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Logic of RSiena</title>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/clipboard-1.7.1/clipboard.min.js"></script>
+<link href="site_libs/primer-tooltips-1.4.0/build.css" rel="stylesheet" />
+<link href="site_libs/klippy-0.0.0.9500/css/klippy.min.css" rel="stylesheet" />
+<script src="site_libs/klippy-0.0.0.9500/js/klippy.min.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="tweaks.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Sunbelt 2024 Workshop</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    RSiena
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="45logicRSiena.html">Logic</a>
+    </li>
+    <li>
+      <a href="50pubnets.html">Dataprep</a>
+    </li>
+    <li>
+      <a href="60RSiena.html">Analyses</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/JochemTolsma/INSNA2023">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Logic of RSiena</h1>
+
+</div>
+
+
+<script>
+  addClassKlippyTo("pre.r, pre.markdown");
+  addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
+</script>
+<hr />
+<div id="introduction" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<script>
+function myFunction() {
+
+            var btn = document.getElementById("myButton");
+            //to make it fancier
+            if (btn.value == "Click to hide code") {
+                btn.value = "Read more";
+                btn.innerHTML = "Read more";
+            }
+            else {
+                btn.value = "Click to hide code";
+                btn.innerHTML = "Read less";
+            }
+            //this is what you're looking for
+            var x = document.getElementById("myDIV");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+          
+</script>
+<p>Welcome to the website of the Sunbelt 2024 Workshop: <strong>RSiena</strong></p>
+<p><br></p>
+<p>TEXT HERE</p>
+<!--
+
+<button class="button1" onclick="myFunction()" id="myButton" value="Click To Open Instructions">
+
+Read more
+
+</button>
+
+::: {#myDIV style="display:none;"}
+<br>
+
+more text here
+
+<br>
+:::
+
+--->
+<hr />
+</div>
+<div id="getting-started" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Getting started</h1>
+<div id="labjournal" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> LabJournal</h2>
+<p>During the course, students will journal their work and assignments in
+their custom lab journal. A template lab journal can be found on
+<a href="https://github.com/robfranken/LabJournal">GitHub</a>. Here, you find how
+to get started.</p>
+<hr />
+</div>
+</div>
+<div id="program" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Program</h1>
+<p>The program of this workshop will be as follows:</p>
+<p><span style="color: red;">Introduction</span><br />
+<em>Time: 9:00am - 9:30am</em></p>
+<ul>
+<li><strong>all</strong>
+<ul>
+<li>round of introductions<br />
+</li>
+</ul></li>
+<li><strong>Jochem and rOB</strong>
+<ul>
+<li>Our GOALS for today</li>
+</ul></li>
+</ul>
+<p><span style="color: red;">Lab Journal</span><br />
+<em>Time: 9:30am - 10:00am</em></p>
+<ul>
+<li><strong>Rob</strong>
+<ul>
+<li><a href="https://github.com/robfranken/LabJournal">Lab Journal</a></li>
+</ul></li>
+</ul>
+<p><span style="color: red;">Logic of RSiena</span><br />
+<em>Time: 10:00am - 11:30am</em></p>
+<p><span style="color: red;">BREAK</span><br />
+<em>Time: 11:30am - 11:45am</em></p>
+<p><span style="color: red;">Constructing RSiena data objects</span><br />
+<em>Time: 11:45am - 12:30pm</em></p>
+<p><span style="color: red;">BREAK</span><br />
+<em>Time: 12:30pm - 1:45pm</em></p>
+<p><span style="color: red;">Yes finally using RSiena to estimate a model</span><br />
+<em>Time: 1:45pm - 2:30pm</em></p>
+<p><span style="color: red;">RSiena GOF</span><br />
+</p>
+<p><em>Time: 2:30pm - 3:30pm</em></p>
+<p><span style="color: red;">Let’s practice</span><br />
+<em>Time: 3:30pm - 4:30pm</em></p>
+<hr />
+</div>
+
+<div id="rmd-source-code">LS0tICANCnRpdGxlOiAiTG9naWMgb2YgUlNpZW5hIg0KYmlibGlvZ3JhcGh5OiByZWZlcmVuY2VzLmJpYg0KbGluay1jaXRhdGlvbnM6IHllcw0KLS0tDQoNCmBgYHtyLCBnbG9iYWxzZXR0aW5ncywgZWNobz1GQUxTRSwgd2FybmluZz1GQUxTRSwgbWVzc2FnZT1GQUxTRSwgcmVzdWx0cz0naGlkZSd9DQpsaWJyYXJ5KGtuaXRyKQ0Kb3B0c19jaHVuayRzZXQodGlkeS5vcHRzPWxpc3Qod2lkdGguY3V0b2ZmPTEwMCksdGlkeT1UUlVFLCB3YXJuaW5nID0gRkFMU0UsIG1lc3NhZ2UgPSBGQUxTRSxjb21tZW50ID0gIiM+IiwgY2FjaGU9VFJVRSwgY2xhc3Muc291cmNlPWMoInRlc3QiKSwgY2xhc3Mub3V0cHV0PWMoInRlc3QyIiksIGNhY2hlLmxhenkgPSBGQUxTRSkNCm9wdGlvbnMod2lkdGggPSAxMDApIA0KcmdsOjpzZXR1cEtuaXRyKCkNCg0KY29sb3JpemUgPC0gZnVuY3Rpb24oeCwgY29sb3IpIHtzcHJpbnRmKCI8c3BhbiBzdHlsZT0nY29sb3I6ICVzOyc+JXM8L3NwYW4+IiwgY29sb3IsIHgpIH0NCg0KYGBgDQoNCmBgYHtyIGtsaXBweSwgZWNobz1GQUxTRSwgaW5jbHVkZT1UUlVFLCBtZXNzYWdlPUZBTFNFfQ0KIyBpbnN0YWxsLnBhY2thZ2VzKCJyZW1vdGVzIikNCiNyZW1vdGVzOjppbnN0YWxsX2dpdGh1Yigicmxlc3VyL2tsaXBweSIpDQprbGlwcHk6OmtsaXBweShwb3NpdGlvbiA9IGMoJ3RvcCcsICdyaWdodCcpKQ0KI2tsaXBweTo6a2xpcHB5KGNvbG9yID0gJ2RhcmtyZWQnKQ0KI2tsaXBweTo6a2xpcHB5KHRvb2x0aXBfbWVzc2FnZSA9ICdDbGljayB0byBjb3B5JywgdG9vbHRpcF9zdWNjZXNzID0gJ0RvbmUnKQ0KYGBgDQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KDQojIEludHJvZHVjdGlvbg0KDQpgYGB7PWh0bWx9DQo8c2NyaXB0Pg0KZnVuY3Rpb24gbXlGdW5jdGlvbigpIHsNCg0KICAgICAgICAgICAgdmFyIGJ0biA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJteUJ1dHRvbiIpOw0KICAgICAgICAgICAgLy90byBtYWtlIGl0IGZhbmNpZXINCiAgICAgICAgICAgIGlmIChidG4udmFsdWUgPT0gIkNsaWNrIHRvIGhpZGUgY29kZSIpIHsNCiAgICAgICAgICAgICAgICBidG4udmFsdWUgPSAiUmVhZCBtb3JlIjsNCiAgICAgICAgICAgICAgICBidG4uaW5uZXJIVE1MID0gIlJlYWQgbW9yZSI7DQogICAgICAgICAgICB9DQogICAgICAgICAgICBlbHNlIHsNCiAgICAgICAgICAgICAgICBidG4udmFsdWUgPSAiQ2xpY2sgdG8gaGlkZSBjb2RlIjsNCiAgICAgICAgICAgICAgICBidG4uaW5uZXJIVE1MID0gIlJlYWQgbGVzcyI7DQogICAgICAgICAgICB9DQogICAgICAgICAgICAvL3RoaXMgaXMgd2hhdCB5b3UncmUgbG9va2luZyBmb3INCiAgICAgICAgICAgIHZhciB4ID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoIm15RElWIik7DQogICAgICAgICAgICBpZiAoeC5zdHlsZS5kaXNwbGF5ID09PSAibm9uZSIpIHsNCiAgICAgICAgICAgICAgICB4LnN0eWxlLmRpc3BsYXkgPSAiYmxvY2siOw0KICAgICAgICAgICAgfSBlbHNlIHsNCiAgICAgICAgICAgICAgICB4LnN0eWxlLmRpc3BsYXkgPSAibm9uZSI7DQogICAgICAgICAgICB9DQogICAgICAgIH0NCiAgICAgICAgICANCjwvc2NyaXB0Pg0KYGBgDQpXZWxjb21lIHRvIHRoZSB3ZWJzaXRlIG9mIHRoZSBTdW5iZWx0IDIwMjQgV29ya3Nob3A6ICoqUlNpZW5hKioNCg0KPGJyPg0KDQpURVhUIEhFUkUNCg0KPCEtLQ0KDQo8YnV0dG9uIGNsYXNzPSJidXR0b24xIiBvbmNsaWNrPSJteUZ1bmN0aW9uKCkiIGlkPSJteUJ1dHRvbiIgdmFsdWU9IkNsaWNrIFRvIE9wZW4gSW5zdHJ1Y3Rpb25zIj4NCg0KUmVhZCBtb3JlDQoNCjwvYnV0dG9uPg0KDQo6OjogeyNteURJViBzdHlsZT0iZGlzcGxheTpub25lOyJ9DQo8YnI+DQoNCm1vcmUgdGV4dCBoZXJlDQoNCjxicj4NCjo6Og0KDQotLS0+DQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KDQojIEdldHRpbmcgc3RhcnRlZA0KDQojIyBMYWJKb3VybmFsDQoNCkR1cmluZyB0aGUgY291cnNlLCBzdHVkZW50cyB3aWxsIGpvdXJuYWwgdGhlaXIgd29yayBhbmQgYXNzaWdubWVudHMgaW4NCnRoZWlyIGN1c3RvbSBsYWIgam91cm5hbC4gQSB0ZW1wbGF0ZSBsYWIgam91cm5hbCBjYW4gYmUgZm91bmQgb24NCltHaXRIdWJdKGh0dHBzOi8vZ2l0aHViLmNvbS9yb2JmcmFua2VuL0xhYkpvdXJuYWwpLiBIZXJlLCB5b3UgZmluZCBob3cNCnRvIGdldCBzdGFydGVkLg0KDQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KDQojIFByb2dyYW0NCg0KVGhlIHByb2dyYW0gb2YgdGhpcyB3b3Jrc2hvcCB3aWxsIGJlIGFzIGZvbGxvd3M6DQoNCmByIGNvbG9yaXplKCJJbnRyb2R1Y3Rpb24iLCAicmVkIilgXA0KKlRpbWU6IDk6MDBhbSAtIDk6MzBhbSogIA0KDQotICoqYWxsKiogIA0KICAgIC0gcm91bmQgb2YgaW50cm9kdWN0aW9ucyAgDQotICoqSm9jaGVtIGFuZCByT0IqKg0KICAgIC0gICBPdXIgR09BTFMgZm9yIHRvZGF5DQoNCmByIGNvbG9yaXplKCJMYWIgSm91cm5hbCIsICJyZWQiKWBcDQoqVGltZTogOTozMGFtIC0gMTA6MDBhbSoNCg0KLSAgICoqUm9iKioNCiAgICAtICAgW0xhYiBKb3VybmFsXShodHRwczovL2dpdGh1Yi5jb20vcm9iZnJhbmtlbi9MYWJKb3VybmFsKQ0KDQpgciBjb2xvcml6ZSgiTG9naWMgb2YgUlNpZW5hIiwgInJlZCIpYFwNCipUaW1lOiAxMDowMGFtIC0gMTE6MzBhbSoNCg0KYHIgY29sb3JpemUoIkJSRUFLIiwgInJlZCIpYFwNCipUaW1lOiAxMTozMGFtIC0gMTE6NDVhbSoNCg0KYHIgY29sb3JpemUoIkNvbnN0cnVjdGluZyBSU2llbmEgZGF0YSBvYmplY3RzIiwgInJlZCIpYFwNCipUaW1lOiAxMTo0NWFtIC0gMTI6MzBwbSoNCg0KYHIgY29sb3JpemUoIkJSRUFLIiwgInJlZCIpYFwNCipUaW1lOiAxMjozMHBtIC0gMTo0NXBtKg0KDQpgciBjb2xvcml6ZSgiWWVzIGZpbmFsbHkgdXNpbmcgUlNpZW5hIHRvIGVzdGltYXRlIGEgbW9kZWwiLCAicmVkIilgXA0KKlRpbWU6IDE6NDVwbSAtIDI6MzBwbSoNCg0KYHIgY29sb3JpemUoIlJTaWVuYSBHT0YiLCAicmVkIilgXA0KDQoqVGltZTogMjozMHBtIC0gMzozMHBtKg0KDQpgciBjb2xvcml6ZSgiTGV0J3MgcHJhY3RpY2UiLCAicmVkIilgXA0KKlRpbWU6IDM6MzBwbSAtIDQ6MzBwbSoNCg0KLS0tICANCg0K</div>
+<style>
+  .center {
+    text-align: center;
+    color: red;
+  }
+</style>
+  
+  <hr>
+  <br>
+  <p class="center">Copyright &copy; 2024 Jochem Tolsma </p>
+    
+    
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("index.rmd");
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,127 @@
+---  
+title: "Logic of RSiena"
+bibliography: references.bib
+link-citations: yes
+---
+
+```{r, globalsettings, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=100),tidy=TRUE, warning = FALSE, message = FALSE,comment = "#>", cache=TRUE, class.source=c("test"), class.output=c("test2"), cache.lazy = FALSE)
+options(width = 100) 
+rgl::setupKnitr()
+
+colorize <- function(x, color) {sprintf("<span style='color: %s;'>%s</span>", color, x) }
+
+```
+
+```{r klippy, echo=FALSE, include=TRUE, message=FALSE}
+# install.packages("remotes")
+#remotes::install_github("rlesur/klippy")
+klippy::klippy(position = c('top', 'right'))
+#klippy::klippy(color = 'darkred')
+#klippy::klippy(tooltip_message = 'Click to copy', tooltip_success = 'Done')
+```
+
+------------------------------------------------------------------------
+
+# Introduction
+
+```{=html}
+<script>
+function myFunction() {
+
+            var btn = document.getElementById("myButton");
+            //to make it fancier
+            if (btn.value == "Click to hide code") {
+                btn.value = "Read more";
+                btn.innerHTML = "Read more";
+            }
+            else {
+                btn.value = "Click to hide code";
+                btn.innerHTML = "Read less";
+            }
+            //this is what you're looking for
+            var x = document.getElementById("myDIV");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+          
+</script>
+```
+Welcome to the website of the Sunbelt 2024 Workshop: **RSiena**
+
+<br>
+
+TEXT HERE
+
+<!--
+
+<button class="button1" onclick="myFunction()" id="myButton" value="Click To Open Instructions">
+
+Read more
+
+</button>
+
+::: {#myDIV style="display:none;"}
+<br>
+
+more text here
+
+<br>
+:::
+
+--->
+
+------------------------------------------------------------------------
+
+# Getting started
+
+## LabJournal
+
+During the course, students will journal their work and assignments in
+their custom lab journal. A template lab journal can be found on
+[GitHub](https://github.com/robfranken/LabJournal). Here, you find how
+to get started.
+
+
+------------------------------------------------------------------------
+
+# Program
+
+The program of this workshop will be as follows:
+
+`r colorize("Introduction", "red")`\
+*Time: 9:00am - 9:30am*:    
+    - round of introductions  
+    - Our GOALS for today
+
+`r colorize("Lab Journal", "red")`\
+*Time: 9:30am - 10:00am*:  
+    -   [Lab Journal](https://github.com/robfranken/LabJournal)
+
+`r colorize("Logic of RSiena", "red")`\
+*Time: 10:00am - 11:30am*
+
+`r colorize("BREAK", "red")`\
+*Time: 11:30am - 11:45am*
+
+`r colorize("Constructing RSiena data objects", "red")`\
+*Time: 11:45am - 12:30pm*
+
+`r colorize("BREAK", "red")`\
+*Time: 12:30pm - 1:45pm*
+
+`r colorize("Yes finally using RSiena to estimate a model", "red")`\
+*Time: 1:45pm - 2:30pm*
+
+`r colorize("RSiena GOF", "red")`\
+*Time: 2:30pm - 3:30pm*
+
+`r colorize("Let's practice", "red")`\
+*Time: 3:30pm - 4:30pm*
+
+---  
+

@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Logic of RSiena</title>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/clipboard-1.7.1/clipboard.min.js"></script>
+<link href="site_libs/primer-tooltips-1.4.0/build.css" rel="stylesheet" />
+<link href="site_libs/klippy-0.0.0.9500/css/klippy.min.css" rel="stylesheet" />
+<script src="site_libs/klippy-0.0.0.9500/js/klippy.min.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="tweaks.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Sunbelt 2024 Workshop</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    RSiena
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="45logicRSiena.html">Logic</a>
+    </li>
+    <li>
+      <a href="50pubnets.html">Dataprep</a>
+    </li>
+    <li>
+      <a href="60RSiena.html">Analyses</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/JochemTolsma/INSNA2023">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Logic of RSiena</h1>
+
+</div>
+
+
+<script>
+  addClassKlippyTo("pre.r, pre.markdown");
+  addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
+</script>
+<hr />
+<div id="getting-started" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> getting started</h1>
+<p>Start with clean workspace</p>
+<pre class="r test"><code>rm(list = ls())</code></pre>
+<hr />
+<div id="goal" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Goal</h2>
+<p>Our goal is to understand the very basics of RSiena.</p>
+<p>For a thorough introduction in RSiena:</p>
+<ul>
+<li>start with the <a href="https://www.stats.ox.ac.uk/~snijders/siena/RSiena_Manual.pdf">manual</a>
+<ul>
+<li>Chapters 2, 5, 12 (chapter 12 is the one I come back to most often)</li>
+</ul></li>
+<li>Follow the Rscripts <a href="https://www.stats.ox.ac.uk/~snijders/siena/">here</a> or for .rmd style <a href="https://jochemtolsma.github.io/RSiena-scripts/">here</a><br />
+</li>
+<li>For an explanation how to interpret effects see <a href="https://www.jochemtolsma.nl/courses/complete-networks/socio6/">here</a></li>
+<li>Sign up for the mailing lists</li>
+</ul>
+<p>See this workshop more as a teaser. I hope that after the workshop you become enthusiastic about the logic of RSiena and are able to understand the manual.</p>
+</div>
+<div id="custom-functions" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Custom functions</h2>
+<ul>
+<li><code>fpackage.check</code>: Check if packages are installed (and install if not) in R (<a href="https://vbaliga.github.io/verify-that-r-packages-are-installed-and-loaded/">source</a>).<br />
+</li>
+<li><code>fsave</code>: Save to processed data in repository<br />
+</li>
+<li><code>fload</code>: To load the files back after an <code>fsave</code><br />
+</li>
+<li><code>fshowdf</code>: To print objects (tibbles / data.frame) nicely on screen in .rmd</li>
+</ul>
+<pre class="r test"><code>fpackage.check &lt;- function(packages) {
+    lapply(packages, FUN = function(x) {
+        if (!require(x, character.only = TRUE)) {
+            install.packages(x, dependencies = TRUE)
+            library(x, character.only = TRUE)
+        }
+    })
+}
+
+fsave &lt;- function(x, file = NULL, location = &quot;./data/processed/&quot;) {
+    ifelse(!dir.exists(&quot;data&quot;), dir.create(&quot;data&quot;), FALSE)
+    ifelse(!dir.exists(&quot;data/processed&quot;), dir.create(&quot;data/processed&quot;), FALSE)
+    if (is.null(file))
+        file = deparse(substitute(x))
+    datename &lt;- substr(gsub(&quot;[:-]&quot;, &quot;&quot;, Sys.time()), 1, 8)
+    totalname &lt;- paste(location, datename, file, &quot;.rda&quot;, sep = &quot;&quot;)
+    save(x, file = totalname)  #need to fix if file is reloaded as input name, not as x. 
+}
+
+fload &lt;- function(filename) {
+    load(filename)
+    get(ls()[ls() != &quot;filename&quot;])
+}
+
+fshowdf &lt;- function(x, ...) {
+    knitr::kable(x, digits = 2, &quot;html&quot;, ...) %&gt;%
+        kableExtra::kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;)) %&gt;%
+        kableExtra::scroll_box(width = &quot;100%&quot;, height = &quot;300px&quot;)
+}
+
+colorize &lt;- function(x, color) {
+    sprintf(&quot;&lt;span style=&#39;color: %s;&#39;&gt;%s&lt;/span&gt;&quot;, color, x)
+}</code></pre>
+</div>
+<div id="packages" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> packages</h2>
+<ul>
+<li><code>RSiena</code>: what do you think?</li>
+<li><code>RsienaTwoStep</code>: this packages assesses the ministep assumption of RSiena but is useful for this tutorial<br />
+</li>
+<li><code>devtools</code>: to load from github<br />
+</li>
+<li><code>igraph</code>: plotting tools. For a tutorial on plotting networks, see <a href="https://snass.netlify.app/network-visualization.html">our chapter in SNASS</a></li>
+</ul>
+<pre class="r test"><code>packages = c(&quot;RSiena&quot;, &quot;devtools&quot;, &quot;igraph&quot;)
+fpackage.check(packages)
+# devtools::install_github(&#39;JochemTolsma/RsienaTwoStep&#39;, build_vignettes=TRUE)
+packages = c(&quot;RsienaTwoStep&quot;)
+fpackage.check(packages)</code></pre>
+<hr />
+</div>
+</div>
+<div id="the-logic-of-saoms" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> The logic of SAOMs</h1>
+<p>See <span class="citation">(<a href="#ref-ripley2022manual">Ripley et al. 2022</a>)</span> paragraph 2.1</p>
+</div>
+<div id="rsiena-as-abm" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> RSiena as ABM</h1>
+<p>RSiena models <em>the evolution</em> of network structures and/or the behavior of the social agents.
+It takes the current situation <span class="math inline">\(T_0\)</span> as starting point. It estimates the ‘rules’ for the agents how to change their ties and/or behavior. If the model is specified correctly, these rules have led the situation at <span class="math inline">\(T_0\)</span> to evolve into the situation observed at <span class="math inline">\(T_1\)</span>.</p>
+<p>I would say these ‘rules’ are our <strong><em>micro theory of action</em></strong>.<br />
+Please note that our behavior may depend on the situation we are in. Similarly, the ‘rules’ we discover with RSiena are thus conditional on the situation at <span class="math inline">\(T_0\)</span>.</p>
+<p>If we know the ‘rules’ of the social agents, we can also simulate future networks. And I think this aspect will help us to understand what the ‘rules’ of the social agents are and to understand what is estimated by <code>RSiena</code>.</p>
+<div id="rsienas-ministep" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> RSiena’s ministep</h2>
+<p>Before we can start to simulate or understand RSiena we need to know what is meant by the ministep assumption.</p>
+<p>Let us quote the manual</p>
+<blockquote>
+<p>“The Stochastic Actor-Oriented Model can be regarded as an agent-based (‘actorbased’) simulation model of the network evolution; where all network changes are decomposed into very small steps, so-called ministeps, in which one actor creates or terminates one outgoing tie.”</p>
+<p>“…it does not necessarily reflect a commitment to or belief in any particular theory of action elaborated in the scientific disciplines.”</p>
+<p>“It is assumed that actors change their scores on the dependent variable (tie or behavior) such that they improve their total satisfaction […] with her/his local network neighborhood configuration.”</p>
+<p>“Actors only evaluate all possible results in the local network neighborhood configurations that result from one ministep.”</p>
+</blockquote>
+<p>The <em>ministep</em> is thus already an important ‘rule’ of how agents are allowed to behave. Does this mean the ministep is already theory, or just a modelling assumption!!??</p>
+<p>Okay, but what does the SAOM of RSiena not do??:</p>
+<ul>
+<li>No re-activity<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>: The act of re-affirming, making or breaking an outgoing tie does not trigger a response by the involved alter<br />
+</li>
+<li>No simultaneity: Changes occur one by one<br />
+</li>
+<li>Hence also no cooperation, coordination or negotiation<br />
+</li>
+<li>No maximization of total utility:
+<ul>
+<li>No altruistic behavior: Individual utility is maximized, not total utility<br />
+</li>
+</ul></li>
+<li>No strategic behavior:
+<ul>
+<li>Very finite time horizon. Agent does not predict how his/her future local network neighborhood may change after:
+<ul>
+<li>Making another ministep him/herself<br />
+</li>
+<li>A ministep of other agents</li>
+</ul></li>
+<li>Hence also no investments</li>
+</ul></li>
+</ul>
+<p>This does not mean that RSiena cannot estimate (or better: ‘fit’) the evolution of networks/behavior that are the consequences of these more complex ‘rules’ or micro theories but it assumes actors only make ministeps.</p>
+</div>
+<div id="simulation-logic" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Simulation Logic</h2>
+<ol style="list-style-type: decimal">
+<li>Sample ego<br />
+</li>
+<li>Construct possible alternative future networks based on all possible ministeps of ego<br />
+</li>
+<li>Calculate how sampled ego evaluates these possible networks<br />
+</li>
+<li>Let the ego pick a network, that is, let agent decide on a tie-change<br />
+</li>
+<li>GOTO 1 (STOPPING RULE: until we have made enough ministeps)</li>
+</ol>
+<div id="sample-an-ego" class="section level3" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Sample an ego</h3>
+<p>Let us first start with a network. We will use the build in network of <code>RsienaTwoStep</code>.</p>
+<div id="net1" class="section level4" number="3.2.1.1">
+<h4><span class="header-section-number">3.2.1.1</span> net1</h4>
+<p>Adjacency matrix</p>
+<pre class="r test"><code>ts_net1</code></pre>
+<pre class="test2"><code>#&gt;       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+#&gt;  [1,]    0    0    0    0    0    0    0    0    0     0
+#&gt;  [2,]    0    0    1    0    0    0    0    0    0     0
+#&gt;  [3,]    1    0    0    0    0    1    0    0    0     0
+#&gt;  [4,]    0    0    0    0    0    0    0    0    1     0
+#&gt;  [5,]    0    0    0    0    0    0    0    0    0     0
+#&gt;  [6,]    0    0    0    0    0    0    0    0    1     1
+#&gt;  [7,]    1    0    0    0    0    0    0    0    0     0
+#&gt;  [8,]    0    0    0    0    0    0    0    0    0     1
+#&gt;  [9,]    0    0    0    1    0    0    0    1    0     0
+#&gt; [10,]    0    0    0    0    0    0    0    1    1     0</code></pre>
+</div>
+<div id="plot-ts_net1" class="section level4" number="3.2.1.2">
+<h4><span class="header-section-number">3.2.1.2</span> Plot ts_net1</h4>
+<pre class="r test"><code>net1g &lt;- graph_from_adjacency_matrix(ts_net1, mode = &quot;directed&quot;)
+coords &lt;- layout_(net1g, nicely())  #let us keep the layout
+par(mar = c(0.1, 0.1, 0.1, 0.1))
+{
+    plot.igraph(net1g, layout = coords)
+    graphics::box()
+}</code></pre>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-5"></span>
+<img src="45logicRSiena_files/figure-html/unnamed-chunk-5-1.png" alt="ts_net1" width="672" />
+<p class="caption">
+Figure 3.1: ts_net1
+</p>
+</div>
+<p>So only one actor is allowed to make one ministep. But who? This is determined by the so-called <strong>rate function</strong> and it may depend on ego-characteristics of our social agents (e.g. male/female) and/or on structural-characteristics of our social agents (e.g. indegree, outdegree). And all this can be estimated within RSiena. For this course in RSiena it would go way too far to explain in detail the rate function. It is also not that important. More often than note, we simply assume that all actors have an equal chance of being selected to make a ministep.</p>
+<p>For more information on the rate function see <a href="https://www.jochemtolsma.nl/courses/complete-networks/socio6/">here</a>.</p>
+</div>
+<div id="select-agent" class="section level4" number="3.2.1.3">
+<h4><span class="header-section-number">3.2.1.3</span> select agent</h4>
+<p>Okay, we can thus randomly select an agent.</p>
+<pre class="r test"><code>set.seed(24553253)
+ego &lt;- ts_select(net = ts_net1)
+ego</code></pre>
+<pre class="test2"><code>#&gt; [1] 4</code></pre>
+</div>
+</div>
+<div id="possible-networks-after-ministep" class="section level3" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> Possible networks after ministep</h3>
+<p>Let us suppose we want to know what the possible networks are after all possible ministeps of <code>ego</code> who is part of <code>ts_net1</code>. That is, let us assume that it is ego’s turn (ego#: 4) to decide on tie-change. What are the possible networks?</p>
+<p>The function <code>ts_alternatives_ministep()</code> returns a list of all possible networks after all possible tie-changes available to an ego given the current state of a network.</p>
+<pre class="r test"><code>options &lt;- ts_alternatives_ministep(net = ts_net1, ego = ego)
+options
+plots &lt;- lapply(options, graph_from_adjacency_matrix, mode = &quot;directed&quot;)
+par(mar = c(0, 0, 0, 0) + 0.1)
+par(mfrow = c(2, 2))
+
+fplot &lt;- function(x) {
+    plot.igraph(x, layout = coords, margin = 0)
+    graphics::box()
+}
+
+lapply(plots, fplot)</code></pre>
+<p><img src="45logicRSiena_files/figure-html/unnamed-chunk-7-1.png" width="672" /><img src="45logicRSiena_files/figure-html/unnamed-chunk-7-2.png" width="672" /><img src="45logicRSiena_files/figure-html/unnamed-chunk-7-3.png" width="672" /></p>
+</div>
+<div id="network-statistics" class="section level3" number="3.2.3">
+<h3><span class="header-section-number">3.2.3</span> Network statistics</h3>
+<p>Which option (or ministep) will ego choose? Naturally this will depend on which network characteristics (or so-called statistics) ego finds relevant. Let us suppose that ego bases its decision solely on the number of ties it sends to others and the number of reciprocated ties it has with others.</p>
+<p>Let us count the number of ties ego sends to alters.</p>
+<pre class="r test"><code>ts_degree(net = options[[1]], ego = ego)</code></pre>
+<pre class="test2"><code>#&gt; [1] 2</code></pre>
+<p>or for all options</p>
+<pre class="r test"><code>sapply(options, ts_degree, ego = ego)</code></pre>
+<pre class="test2"><code>#&gt;  [1] 2 2 2 1 2 2 2 2 0 2</code></pre>
+<p>And let us count the number of reciprocated ties</p>
+<pre class="r test"><code>sapply(options, ts_recip, ego = ego)</code></pre>
+<pre class="test2"><code>#&gt;  [1] 1 1 1 1 1 1 1 1 0 1</code></pre>
+<blockquote>
+<p><strong>Assigment 1:</strong><br />
+1a: write a function that counts the number of transitive triads for our ego<br />
+1b: write a function that counts for all ego’s the transitive triads and sums the result</p>
+</blockquote>
+<p>In the package <code>RsienaTwoStep</code> there are functions for the following network statistics <span class="math inline">\(s\)</span>:</p>
+<ul>
+<li>degree: <code>ts_degree()</code></li>
+<li>reciprocity: <code>ts_recip()</code><br />
+</li>
+<li>outdegree activity: <code>ts_outAct()</code></li>
+<li>indegree activity: <code>ts_inAct()</code></li>
+<li>outdegree popularity: <code>ts_outPop()</code></li>
+<li>indegree popularity: <code>ts_inPop()</code><br />
+</li>
+<li>transitivity: <code>ts_transTrip()</code></li>
+<li>mediated transitivity: <code>ts_transMedTrip()</code><br />
+</li>
+<li>transitive reciprocated triplets: <code>ts_transRecTrip()</code></li>
+<li>number of three-cycles: <code>ts_cycle3()</code></li>
+</ul>
+<p>Please see <code>?ts_degree()</code>.</p>
+<p><span style="color: red;">Update: there are quite a lot more. But not very relevant for us at this time.</span></p>
+<p>See <span class="citation">Ripley et al. (<a href="#ref-ripley2022manual">2022</a>)</span> (Chapter 12) for the mathematical formulation. Naturally, you are free to define your own network statistics.</p>
+</div>
+<div id="evaluation-function" class="section level3" number="3.2.4">
+<h3><span class="header-section-number">3.2.4</span> Evaluation function</h3>
+<p>But what evaluation value does ego attach to these network statistics and consequently to the network (in its vicinity) as a whole? Well these are the parameters, <span class="math inline">\(\beta\)</span>, you will normally estimate with <code>RSiena::siena07()</code>.
+Let us suppose the importance for:</p>
+<ul>
+<li>the statistic ‘degree’ is -1<br />
+</li>
+<li>for the statistic ‘reciprocity’ is 1.5.</li>
+</ul>
+<p>So you could calculate the evaluation of the network saved in <code>options[[4]]</code> by hand:</p>
+<p><span class="math display">\[f^{eval}_{n}(\mathbf{s_{i}},\mathbf{\beta}) = \mathbf{s_i}^\mathsf{T}\mathbf{\beta}, \]</span><br />
+with <span class="math inline">\(f^{eval}_{n}\)</span> the evaluation function for agent <span class="math inline">\(n\)</span>. <span class="math inline">\(\mathbf{s_{i}}\)</span> are the network statistics for network <span class="math inline">\(i\)</span> and <span class="math inline">\(\mathbf{\beta}\)</span> the corresponding parameters (or importance).</p>
+<pre class="r test"><code>option &lt;- 4
+ts_degree(options[[option]], ego = ego) * -1 + ts_recip(options[[option]], ego = ego) * 1.5</code></pre>
+<pre class="test2"><code>#&gt; [1] 0.5</code></pre>
+<p>Or you could use the <code>ts_eval()</code>.</p>
+<pre class="r test"><code>eval &lt;- ts_eval(net = options[[option]], ego = ego, statistics = list(ts_degree, ts_recip), parameters = c(-1,
+    1.5))
+eval</code></pre>
+<pre class="test2"><code>#&gt; [1] 0.5</code></pre>
+<p>Now, let us calculate the evaluation of all possible networks:</p>
+<pre class="r test"><code>eval &lt;- sapply(options, FUN = ts_eval, ego = ego, statistics = list(ts_degree, ts_recip), parameters = c(-1,
+    1.5))
+eval
+print(&quot;network with maximum evaluation score:&quot;)
+which.max(eval)</code></pre>
+<pre class="test2"><code>#&gt;  [1] -0.5 -0.5 -0.5  0.5 -0.5 -0.5 -0.5 -0.5  0.0 -0.5
+#&gt; [1] &quot;network with maximum evaluation score:&quot;
+#&gt; [1] 4</code></pre>
+</div>
+<div id="choice-function" class="section level3" number="3.2.5">
+<h3><span class="header-section-number">3.2.5</span> Choice function</h3>
+<p>So which option will ego choose? Naturally this will be a stochastic process. But we see that option 4 has the highest evaluation.
+We use McFadden’s choice function (for more information see <a href="https://en.wikipedia.org/wiki/Discrete_choice">wiki</a>), that is let <span class="math inline">\(P_{ni}\)</span> be the probability that ego <span class="math inline">\(n\)</span> chooses network/alternative <span class="math inline">\(i\)</span>. The choice function is then given by:</p>
+<p><span class="math display">\[P_{n,i} = \frac{exp(\mathbf{s_i}^\mathsf{T}\mathbf{\beta} )}{\Sigma_{j=1}^J exp(\mathbf{s_j}^\mathsf{T}\mathbf{\beta} )},\]</span></p>
+<p>with <span class="math inline">\(s_i\)</span> a vector of the value of each network statistics for network <span class="math inline">\(i\)</span> and <span class="math inline">\(\beta\)</span> is the vector of parameter values. Hence, <span class="math inline">\(\mathbf{s_i}^\mathsf{T}\mathbf{\beta}\)</span> is the value of the evaluation for network <span class="math inline">\(i\)</span>.</p>
+<p>Let us force ego to make a decision.</p>
+<pre class="r test"><code>choice &lt;- sample(1:length(eval), size = 1, prob = exp(eval)/sum(exp(eval)))
+print(&quot;choice:&quot;)
+choice
+# print(&#39;network:&#39;) options[[choice]]</code></pre>
+<pre class="test2"><code>#&gt; [1] &quot;choice:&quot;
+#&gt; [1] 10</code></pre>
+<p>If we repeat this process, that is…:</p>
+<ol style="list-style-type: decimal">
+<li>sample agent<br />
+</li>
+<li>construct possible alternative networks<br />
+</li>
+<li>calculate how sampled agent evaluates the possible networks<br />
+</li>
+<li>Let the agent pick a network, that is, let agent decide on a tie-change<br />
+</li>
+<li>GO BACK TO 1 (STOPPING RULE: until you think we have made enough ministeps)</li>
+</ol>
+<p>…we have an agent based model.</p>
+<div id="interpretation-of-parameters" class="section level4" number="3.2.5.1">
+<h4><span class="header-section-number">3.2.5.1</span> Interpretation of parameters</h4>
+<p>Although we have not yet estimated an RSiena model, this is already the time to explain the interpretation of the estimated parameters.
+Suppose that you want to interpret the estimated parameter for the degree statistic.</p>
+<p>Have a look at the possible options our ego has. Can you find two networks that only differ with respect to the number of ties, and more precisely only with respect to 1 (sending) tie?</p>
+<p>For example, Option 1, has one more sending tie than option 4.</p>
+<p>What is the probability ratio?:</p>
+<p><span class="math display">\[ \frac{P_{n,i=1}}{P_{n,i=4}},\]</span></p>
+<p>You will see that the denominator cancels out. Thus:</p>
+<p><span class="math display">\[ \frac{P_{n,i=1}}{P_{n,i=4}} = \frac{exp(\mathbf{s_{i=1}}^\mathsf{T}\mathbf{\beta} )}{exp(\mathbf{s_{i=4}}^\mathsf{T}\mathbf{\beta} )} = exp(\mathbf{s_{i=1}}^\mathsf{T}\mathbf{\beta} - \mathbf{s_{i=4}}^\mathsf{T}\mathbf{\beta}) = exp({\beta_{degree}}) ,\]</span><br />
+and thus:</p>
+<p><span class="math display">\[ log(\frac{P_{n,i=1}}{P_{n,i=4}}) = {\beta} ,\]</span>
+…the log probability ratio that an ego will choose a network with one additional sending tie over a network without an additional sending tie is precisely our statistic parameter <span class="math inline">\({\beta}\)</span>.</p>
+<p>Hopefully you see the interpretation similarity with a standard (multinomial) logit model.</p>
+</div>
+</div>
+<div id="stopping-rule" class="section level3" number="3.2.6">
+<h3><span class="header-section-number">3.2.6</span> Stopping rule</h3>
+<p>But how many ministeps do we allow? Well, normally this is estimated by <code>siena07</code> by the <code>rate</code> parameter.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> If we do not make this rate parameter conditional on actor covariates or on network characteristics, the rate parameter can be interpreted as the average number of ministeps each actor in the network is allowed to make before time is up. Let us suppose the <code>rate</code> parameter is 2 . Thus in total the number of possible ministeps will be <code>nrow(net1)*rate</code>: 20. For a more detailed - <strong>and more correct</strong> - interpretation of the rate parameter in <code>siena07</code> see: <a href="www.jochemtolsma.nl/courses/complete-networks/socio6">www.jochemtolsma.nl</a>.</p>
+</div>
+</div>
+<div id="simulation-example" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Simulation example</h2>
+<p>Let us now simulate how the network <strong>could</strong> evolve given:<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
+<ul>
+<li>starting point is <code>ts_net1</code></li>
+<li>rate is set to 2<br />
+</li>
+<li>we as scientists think only network statistics degree and reciprocity are important<br />
+</li>
+<li><code>RSiena::siena07</code> has determined the parameters for these statistics are -1 and 1.5 respectively</li>
+</ul>
+<pre class="test2"><code>#&gt;       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+#&gt;  [1,]    0    0    0    0    0    0    0    0    0     0
+#&gt;  [2,]    0    0    1    0    0    0    0    0    0     0
+#&gt;  [3,]    1    0    0    0    0    1    0    0    0     0
+#&gt;  [4,]    0    0    0    0    0    0    0    0    1     0
+#&gt;  [5,]    0    0    0    0    0    0    0    0    0     0
+#&gt;  [6,]    0    0    0    0    0    0    0    0    1     1
+#&gt;  [7,]    1    0    0    0    0    0    0    0    0     0
+#&gt;  [8,]    0    0    0    0    0    0    0    0    0     1
+#&gt;  [9,]    0    0    0    1    0    0    0    1    0     0
+#&gt; [10,]    0    0    0    0    0    0    0    1    1     0</code></pre>
+<pre class="r test"><code>simnet2 &lt;- ts_sim(
+        net1=ts_net1, #this is our start netwwork
+        statistics=list(ts_degree, ts_recip), #we only include to statistics
+        startvalues = c(2,-1,1.5)) # the start values for our rate parameter (automatically included), and our two statistics
+
+simnet2</code></pre>
+<pre class="test2"><code>#&gt;       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+#&gt;  [1,]    0    0    0    0    1    1    0    0    0     0
+#&gt;  [2,]    0    0    1    0    0    1    0    0    0     0
+#&gt;  [3,]    0    0    0    0    1    1    0    0    0     0
+#&gt;  [4,]    0    0    0    0    0    1    0    0    1     1
+#&gt;  [5,]    0    0    0    0    0    0    0    0    0     0
+#&gt;  [6,]    0    0    0    0    0    0    0    0    1     1
+#&gt;  [7,]    0    0    0    0    0    0    0    0    0     0
+#&gt;  [8,]    0    0    0    0    0    0    0    0    0     0
+#&gt;  [9,]    1    0    0    1    0    0    0    0    0     0
+#&gt; [10,]    0    0    0    0    0    0    0    1    0     0</code></pre>
+<blockquote>
+<p><strong>Assignment 2:</strong><br />
+2a: Use the same starting values and make 10 simulation runs (save results in a list or something). Hint, you may want to use <code>ts_sims()</code><br />
+2b: tweak the starting values (a couple of times) and for each parameter configuration make 10 simulation runs (once again save your results)
+2c: for each of the simulated networks calculate to total number of ties and the total number reciprocated ties<br />
+2d: What did you learn from this exercise?</p>
+</blockquote>
+</div>
+</div>
+<div id="estimation-logic" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Estimation logic</h1>
+<p>So now you have some grasp of the logic of RSiena. But how does the estimation work?</p>
+<p>Well, that is quite complicated. But it goes something like this:<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></p>
+<ol style="list-style-type: decimal">
+<li>Define model: researcher includes effects<br />
+</li>
+<li>initial parameter values of effects (commonly ‘0’)<br />
+</li>
+<li>simulate an outcome network based on these parameter values<br />
+</li>
+<li>compare the network statistics of the simulated outcome network with the observed outcome network (i.e. the <em>target values</em>)
+<ul>
+<li>based on the included effects. Thus the simulated network may contain 10 ties, but the observed network may contain 20 ties. Apparently, with the current parameter values we underestimate the density/degree of the outcome network and we may wish to increase the parameter of our density parameter.<br />
+</li>
+</ul></li>
+<li>tweak/update parameter values in some smart way<br />
+</li>
+<li>GOTO 3 (BREAK RULE: until parameter values cannot be improved anymore / or reached good fit)<br />
+</li>
+<li>simulate a bunch of outcome networks with the obtained parameter values and compare the <em>expected values</em> of statistics of the outcome networks with the <em>target values</em>.
+<ul>
+<li>we can assess the fit<br />
+</li>
+<li>estimate SE of the parameters</li>
+</ul></li>
+</ol>
+<blockquote>
+<p><strong>Exercise 3:</strong><br />
+Let us start playing with the build-in datasets of <code>RSiena</code>: <code>s501</code> and <code>s502</code>.<br />
+Pick three statistics that you think will be relevant in estimating the network evolution for these datasets.
+3a. For each of the above statistics, define the target values and program a function that calculates the target values.
+3b. How would you pick smart starting values for the rate and degree parameters?<br />
+3c. Do 10 consecutive simulation runs. After each run you tweak your parameters?<br />
+Did you get close to your target values?</p>
+</blockquote>
+<p>Some hints:</p>
+<p>Calculating targets/outcome values:</p>
+<pre class="r test"><code># calculate the targets
+ts_targets(net1 = s501, net2 = s502, statistics = list(ts_degree, ts_recip))</code></pre>
+<pre class="test2"><code>#&gt;   Rate degree  recip 
+#&gt;    115    116     70</code></pre>
+<pre class="r test"><code># if you set the argument `net2` to be equal to your simulated network, you count the values
+# observed in your simulated network`</code></pre>
+<p>Defining your own statistics:</p>
+<p>You can look at the source code to get inspiration:</p>
+<pre class="r test"><code>ts_transTrip</code></pre>
+<pre class="test2"><code>#&gt; function (net, ego) 
+#&gt; {
+#&gt;     statistic &lt;- 0
+#&gt;     alters &lt;- which(net[ego, ] == 1)
+#&gt;     if (length(alters) &gt; 1) {
+#&gt;         for (alter1 in alters) {
+#&gt;             for (alter2 in alters) {
+#&gt;                 statistic &lt;- statistic + net[alter1, alter2]
+#&gt;             }
+#&gt;         }
+#&gt;     }
+#&gt;     return(statistic)
+#&gt; }
+#&gt; &lt;bytecode: 0x0000013647abc828&gt;
+#&gt; &lt;environment: namespace:RsienaTwoStep&gt;
+#&gt; attr(,&quot;name&quot;)
+#&gt; [1] &quot;transTrip&quot;</code></pre>
+<hr />
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-ripley2022manual" class="csl-entry">
+Ripley, Ruth M, Tom AB Snijders, Zsófia Boda, András Vörös, and Paulina Preciado. 2022. <em>Manual for SIENA Version 4.0 (Version August 11, 2022)</em>. University of Oxford, Department of Statistics, Nuffield College. <a href="http://www.stats.ox.ac.uk/~snijders/siena/RSiena_manual.pdf">http://www.stats.ox.ac.uk/~snijders/siena/RSiena_manual.pdf</a>.
+</div>
+</div>
+</div>
+<div class="footnotes footnotes-end-of-document">
+<hr />
+<ol>
+<li id="fn1"><p><span style="color: red;">The no-reactivity assumption has been relaxed in the latest version of RSiena</span><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>noterate: Naturally, it is a bit more complicated than that. In RSiena we have a choice between unconditional and conditional estimation. My description of the stopping rule refers to the unconditional estimation.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>It is also possible to simulate networks within the <code>RSiena</code> package itself. But let us stick with functions from <code>RsienaTwoStep</code> for now.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>‘it’ refers to estimation via the ‘Method of Moments’<a href="#fnref4" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+
+<div id="rmd-source-code">LS0tICANCnRpdGxlOiAiTG9naWMgb2YgUlNpZW5hIg0KYmlibGlvZ3JhcGh5OiByZWZlcmVuY2VzLmJpYg0KbGluay1jaXRhdGlvbnM6IHllcw0KLS0tDQoNCmBgYHtyLCBnbG9iYWxzZXR0aW5ncywgZWNobz1GQUxTRSwgd2FybmluZz1GQUxTRSwgbWVzc2FnZT1GQUxTRSwgcmVzdWx0cz0naGlkZSd9DQoNCmxpYnJhcnkoa25pdHIpDQpvcHRzX2NodW5rJHNldCh0aWR5Lm9wdHM9bGlzdCh3aWR0aC5jdXRvZmY9MTAwKSx0aWR5PVRSVUUsIHdhcm5pbmcgPSBGQUxTRSwgbWVzc2FnZSA9IEZBTFNFLGNvbW1lbnQgPSAiIz4iLCBjYWNoZT1UUlVFLCBjbGFzcy5zb3VyY2U9YygidGVzdCIpLCBjbGFzcy5vdXRwdXQ9YygidGVzdDIiKSwgY2FjaGUubGF6eSA9IEZBTFNFKQ0Kb3B0aW9ucyh3aWR0aCA9IDEwMCkgDQpyZ2w6OnNldHVwS25pdHIoKQ0KDQpgYGANCg0KDQoNCmBgYHtyIGtsaXBweSwgZWNobz1GQUxTRSwgaW5jbHVkZT1UUlVFLCBtZXNzYWdlPUZBTFNFfQ0KIyBpbnN0YWxsLnBhY2thZ2VzKCJyZW1vdGVzIikNCiNyZW1vdGVzOjppbnN0YWxsX2dpdGh1Yigicmxlc3VyL2tsaXBweSIpDQprbGlwcHk6OmtsaXBweShwb3NpdGlvbiA9IGMoJ3RvcCcsICdyaWdodCcpKQ0KI2tsaXBweTo6a2xpcHB5KGNvbG9yID0gJ2RhcmtyZWQnKQ0KI2tsaXBweTo6a2xpcHB5KHRvb2x0aXBfbWVzc2FnZSA9ICdDbGljayB0byBjb3B5JywgdG9vbHRpcF9zdWNjZXNzID0gJ0RvbmUnKQ0KYGBgDQoNCg0KLS0tLQ0KDQojIGdldHRpbmcgc3RhcnRlZA0KDQpTdGFydCB3aXRoIGNsZWFuIHdvcmtzcGFjZSANCg0KYGBge3J9DQpybShsaXN0PWxzKCkpDQpgYGANCg0KLS0tLQ0KDQojIyBHb2FsDQoNCk91ciBnb2FsIGlzIHRvIHVuZGVyc3RhbmQgdGhlIHZlcnkgYmFzaWNzIG9mIFJTaWVuYS4gIA0KDQpGb3IgYSB0aG9yb3VnaCBpbnRyb2R1Y3Rpb24gaW4gUlNpZW5hOiAgDQoNCi0gc3RhcnQgd2l0aCB0aGUgW21hbnVhbF0oaHR0cHM6Ly93d3cuc3RhdHMub3guYWMudWsvfnNuaWpkZXJzL3NpZW5hL1JTaWVuYV9NYW51YWwucGRmKSAgDQogICAgLSBDaGFwdGVycyAyLCA1LCAxMiAoY2hhcHRlciAxMiBpcyB0aGUgb25lIEkgY29tZSBiYWNrIHRvIG1vc3Qgb2Z0ZW4pDQotIEZvbGxvdyB0aGUgUnNjcmlwdHMgW2hlcmVdKGh0dHBzOi8vd3d3LnN0YXRzLm94LmFjLnVrL35zbmlqZGVycy9zaWVuYS8pIG9yIGZvciAucm1kIHN0eWxlIFtoZXJlXShodHRwczovL2pvY2hlbXRvbHNtYS5naXRodWIuaW8vUlNpZW5hLXNjcmlwdHMvKSAgDQotIEZvciBhbiBleHBsYW5hdGlvbiBob3cgdG8gaW50ZXJwcmV0IGVmZmVjdHMgc2VlIFtoZXJlXShodHRwczovL3d3dy5qb2NoZW10b2xzbWEubmwvY291cnNlcy9jb21wbGV0ZS1uZXR3b3Jrcy9zb2NpbzYvKQ0KLSBTaWduIHVwIGZvciB0aGUgbWFpbGluZyBsaXN0cyAgDQogDQoNClNlZSB0aGlzIHdvcmtzaG9wIG1vcmUgYXMgYSB0ZWFzZXIuIEkgaG9wZSB0aGF0IGFmdGVyIHRoZSB3b3Jrc2hvcCB5b3UgYmVjb21lIGVudGh1c2lhc3RpYyBhYm91dCB0aGUgbG9naWMgb2YgUlNpZW5hIGFuZCBhcmUgYWJsZSB0byB1bmRlcnN0YW5kIHRoZSBtYW51YWwuIA0KDQoNCiMjIEN1c3RvbSBmdW5jdGlvbnMNCg0KLSBgZnBhY2thZ2UuY2hlY2tgOiBDaGVjayBpZiBwYWNrYWdlcyBhcmUgaW5zdGFsbGVkIChhbmQgaW5zdGFsbCBpZiBub3QpIGluIFIgKFtzb3VyY2VdKGh0dHBzOi8vdmJhbGlnYS5naXRodWIuaW8vdmVyaWZ5LXRoYXQtci1wYWNrYWdlcy1hcmUtaW5zdGFsbGVkLWFuZC1sb2FkZWQvKSkuICANCi0gYGZzYXZlYDogU2F2ZSB0byBwcm9jZXNzZWQgZGF0YSBpbiByZXBvc2l0b3J5ICANCi0gYGZsb2FkYDogVG8gbG9hZCB0aGUgZmlsZXMgYmFjayBhZnRlciBhbiBgZnNhdmVgICANCi0gYGZzaG93ZGZgOiBUbyBwcmludCBvYmplY3RzICh0aWJibGVzIC8gZGF0YS5mcmFtZSkgbmljZWx5IG9uIHNjcmVlbiBpbiAucm1kICANCg0KYGBge3IgY3VzdG9tZnVuY3Rpb25zLCByZXN1bHRzPSdoaWRlJ30NCmZwYWNrYWdlLmNoZWNrIDwtIGZ1bmN0aW9uKHBhY2thZ2VzKSB7DQogIGxhcHBseShwYWNrYWdlcywgRlVOID0gZnVuY3Rpb24oeCkgew0KICAgIGlmICghcmVxdWlyZSh4LCBjaGFyYWN0ZXIub25seSA9IFRSVUUpKSB7DQogICAgICBpbnN0YWxsLnBhY2thZ2VzKHgsIGRlcGVuZGVuY2llcyA9IFRSVUUpDQogICAgICBsaWJyYXJ5KHgsIGNoYXJhY3Rlci5vbmx5ID0gVFJVRSkNCiAgICB9DQogIH0pDQp9DQoNCmZzYXZlIDwtIGZ1bmN0aW9uKHgsIGZpbGU9TlVMTCwgbG9jYXRpb249Ii4vZGF0YS9wcm9jZXNzZWQvIikgew0KICBpZmVsc2UoIWRpci5leGlzdHMoImRhdGEiKSwgZGlyLmNyZWF0ZSgiZGF0YSIpLCBGQUxTRSkNCiAgaWZlbHNlKCFkaXIuZXhpc3RzKCJkYXRhL3Byb2Nlc3NlZCIpLCBkaXIuY3JlYXRlKCJkYXRhL3Byb2Nlc3NlZCIpLCBGQUxTRSkNCiAgaWYgKGlzLm51bGwoZmlsZSkpIGZpbGU9IGRlcGFyc2Uoc3Vic3RpdHV0ZSh4KSkNCiAgZGF0ZW5hbWUgPC0gc3Vic3RyKGdzdWIoIls6LV0iLCAiIiwgU3lzLnRpbWUoKSksIDEsOCkgIA0KICB0b3RhbG5hbWUgPC0gcGFzdGUobG9jYXRpb24sIGRhdGVuYW1lLCBmaWxlLCAiLnJkYSIsIHNlcD0iIikNCiAgc2F2ZSh4LCBmaWxlID0gdG90YWxuYW1lKSAgI25lZWQgdG8gZml4IGlmIGZpbGUgaXMgcmVsb2FkZWQgYXMgaW5wdXQgbmFtZSwgbm90IGFzIHguIA0KfQ0KDQpmbG9hZCA8LSBmdW5jdGlvbihmaWxlbmFtZSkgew0KICBsb2FkKGZpbGVuYW1lKQ0KICBnZXQobHMoKVtscygpICE9ICJmaWxlbmFtZSJdKQ0KfQ0KDQpmc2hvd2RmIDwtICBmdW5jdGlvbih4LCAuLi4pIHsNCiAga25pdHI6OmthYmxlKHgsIGRpZ2l0cz0yLCAiaHRtbCIsIC4uLikgJT4lDQogIGthYmxlRXh0cmE6OmthYmxlX3N0eWxpbmcoYm9vdHN0cmFwX29wdGlvbnMgPSBjKCJzdHJpcGVkIiwgImhvdmVyIikpICU+JQ0KICBrYWJsZUV4dHJhOjpzY3JvbGxfYm94KHdpZHRoPSIxMDAlIiwgaGVpZ2h0PSAiMzAwcHgiKQ0KfSANCg0KY29sb3JpemUgPC0gZnVuY3Rpb24oeCwgY29sb3IpIHtzcHJpbnRmKCI8c3BhbiBzdHlsZT0nY29sb3I6ICVzOyc+JXM8L3NwYW4+IiwgY29sb3IsIHgpIH0NCg0KYGBgDQojIyBwYWNrYWdlcw0KDQotIGBSU2llbmFgOiB3aGF0IGRvIHlvdSB0aGluaz8NCi0gYFJzaWVuYVR3b1N0ZXBgOiB0aGlzIHBhY2thZ2VzIGFzc2Vzc2VzIHRoZSBtaW5pc3RlcCBhc3N1bXB0aW9uIG9mIFJTaWVuYSBidXQgaXMgdXNlZnVsIGZvciB0aGlzIHR1dG9yaWFsICANCi0gYGRldnRvb2xzYDogdG8gbG9hZCBmcm9tIGdpdGh1YiAgDQotIGBpZ3JhcGhgOiBwbG90dGluZyB0b29scy4gRm9yIGEgdHV0b3JpYWwgb24gcGxvdHRpbmcgbmV0d29ya3MsIHNlZSBbb3VyIGNoYXB0ZXIgaW4gU05BU1NdKGh0dHBzOi8vc25hc3MubmV0bGlmeS5hcHAvbmV0d29yay12aXN1YWxpemF0aW9uLmh0bWwpIA0KDQoNCmBgYHtyLCByZXN1bHRzPSdoaWRlJ30NCnBhY2thZ2VzID0gYygiUlNpZW5hIiwgImRldnRvb2xzIiwgImlncmFwaCIpDQpmcGFja2FnZS5jaGVjayhwYWNrYWdlcykNCiNkZXZ0b29sczo6aW5zdGFsbF9naXRodWIoIkpvY2hlbVRvbHNtYS9Sc2llbmFUd29TdGVwIiwgYnVpbGRfdmlnbmV0dGVzPVRSVUUpDQpwYWNrYWdlcyA9IGMoIlJzaWVuYVR3b1N0ZXAiKQ0KZnBhY2thZ2UuY2hlY2socGFja2FnZXMpDQpgYGANCg0KLS0tICANCg0KIyBUaGUgbG9naWMgb2YgU0FPTXMNCg0KU2VlIFtAcmlwbGV5MjAyMm1hbnVhbF0gcGFyYWdyYXBoIDIuMQ0KDQojIFJTaWVuYSBhcyBBQk0gDQoNClJTaWVuYSBtb2RlbHMgKnRoZSBldm9sdXRpb24qIG9mIG5ldHdvcmsgc3RydWN0dXJlcyBhbmQvb3IgdGhlIGJlaGF2aW9yIG9mIHRoZSBzb2NpYWwgYWdlbnRzLiANCkl0IHRha2VzIHRoZSBjdXJyZW50IHNpdHVhdGlvbiAkVF8wJCBhcyBzdGFydGluZyBwb2ludC4gSXQgZXN0aW1hdGVzIHRoZSAncnVsZXMnIGZvciB0aGUgYWdlbnRzIGhvdyB0byBjaGFuZ2UgdGhlaXIgdGllcyBhbmQvb3IgYmVoYXZpb3IuIElmIHRoZSBtb2RlbCBpcyBzcGVjaWZpZWQgY29ycmVjdGx5LCB0aGVzZSBydWxlcyBoYXZlIGxlZCB0aGUgc2l0dWF0aW9uIGF0ICRUXzAkIHRvIGV2b2x2ZSBpbnRvIHRoZSBzaXR1YXRpb24gb2JzZXJ2ZWQgYXQgJFRfMSQuIA0KDQpJIHdvdWxkIHNheSB0aGVzZSAncnVsZXMnIGFyZSBvdXIgKioqbWljcm8gdGhlb3J5IG9mIGFjdGlvbioqKi4gIA0KUGxlYXNlIG5vdGUgdGhhdCBvdXIgYmVoYXZpb3IgbWF5IGRlcGVuZCBvbiB0aGUgc2l0dWF0aW9uIHdlIGFyZSBpbi4gU2ltaWxhcmx5LCB0aGUgJ3J1bGVzJyB3ZSBkaXNjb3ZlciB3aXRoIFJTaWVuYSBhcmUgdGh1cyBjb25kaXRpb25hbCBvbiB0aGUgc2l0dWF0aW9uIGF0ICRUXzAkLiANCg0KSWYgd2Uga25vdyB0aGUgJ3J1bGVzJyBvZiB0aGUgc29jaWFsIGFnZW50cywgd2UgY2FuIGFsc28gc2ltdWxhdGUgZnV0dXJlIG5ldHdvcmtzLiBBbmQgSSB0aGluayB0aGlzIGFzcGVjdCB3aWxsIGhlbHAgdXMgdG8gdW5kZXJzdGFuZCB3aGF0IHRoZSAncnVsZXMnIG9mIHRoZSBzb2NpYWwgYWdlbnRzIGFyZSBhbmQgdG8gdW5kZXJzdGFuZCB3aGF0IGlzIGVzdGltYXRlZCBieSBgUlNpZW5hYC4gDQoNCiMjIFJTaWVuYSdzIG1pbmlzdGVwDQoNCkJlZm9yZSB3ZSBjYW4gc3RhcnQgdG8gc2ltdWxhdGUgb3IgdW5kZXJzdGFuZCBSU2llbmEgd2UgbmVlZCB0byBrbm93IHdoYXQgaXMgbWVhbnQgYnkgdGhlIG1pbmlzdGVwIGFzc3VtcHRpb24uIA0KDQpMZXQgdXMgcXVvdGUgdGhlIG1hbnVhbCANCg0KPiDigJxUaGUgU3RvY2hhc3RpYyBBY3Rvci1PcmllbnRlZCBNb2RlbCBjYW4gYmUgcmVnYXJkZWQgYXMgYW4gYWdlbnQtYmFzZWQgKOKAmGFjdG9yYmFzZWTigJkpIHNpbXVsYXRpb24gbW9kZWwgb2YgdGhlIG5ldHdvcmsgZXZvbHV0aW9uOyB3aGVyZSBhbGwgbmV0d29yayBjaGFuZ2VzIGFyZSBkZWNvbXBvc2VkIGludG8gdmVyeSBzbWFsbCBzdGVwcywgc28tY2FsbGVkIG1pbmlzdGVwcywgaW4gd2hpY2ggb25lIGFjdG9yIGNyZWF0ZXMgb3IgdGVybWluYXRlcyBvbmUgb3V0Z29pbmcgdGllLuKAnSANCj4NCj7igJzigKZpdCBkb2VzIG5vdCBuZWNlc3NhcmlseSByZWZsZWN0IGEgY29tbWl0bWVudCB0byBvciBiZWxpZWYgaW4gYW55IHBhcnRpY3VsYXIgdGhlb3J5IG9mIGFjdGlvbiBlbGFib3JhdGVkIGluIHRoZSBzY2llbnRpZmljIGRpc2NpcGxpbmVzLuKAnQ0KPg0KPuKAnEl0IGlzIGFzc3VtZWQgdGhhdCBhY3RvcnMgY2hhbmdlIHRoZWlyIHNjb3JlcyBvbiB0aGUgZGVwZW5kZW50IHZhcmlhYmxlICh0aWUgb3IgYmVoYXZpb3IpIHN1Y2ggdGhhdCB0aGV5IGltcHJvdmUgdGhlaXIgdG90YWwgc2F0aXNmYWN0aW9uIFvigKZdIHdpdGggaGVyL2hpcyBsb2NhbCBuZXR3b3JrIG5laWdoYm9yaG9vZCBjb25maWd1cmF0aW9uLuKAnQ0KPg0KPuKAnEFjdG9ycyBvbmx5IGV2YWx1YXRlIGFsbCBwb3NzaWJsZSByZXN1bHRzIGluIHRoZSBsb2NhbCBuZXR3b3JrIG5laWdoYm9yaG9vZCBjb25maWd1cmF0aW9ucyB0aGF0IHJlc3VsdCBmcm9tIG9uZSBtaW5pc3RlcC7igJ0gIA0KDQpUaGUgKm1pbmlzdGVwKiBpcyB0aHVzIGFscmVhZHkgYW4gaW1wb3J0YW50ICdydWxlJyBvZiBob3cgYWdlbnRzIGFyZSBhbGxvd2VkIHRvIGJlaGF2ZS4gRG9lcyB0aGlzIG1lYW4gdGhlIG1pbmlzdGVwIGlzIGFscmVhZHkgdGhlb3J5LCBvciBqdXN0IGEgbW9kZWxsaW5nIGFzc3VtcHRpb24hIT8/DQoNCk9rYXksIGJ1dCB3aGF0IGRvZXMgdGhlIFNBT00gb2YgUlNpZW5hIG5vdCBkbz8/OiAgDQoNCi0gTm8gcmUtYWN0aXZpdHleW2ByIGNvbG9yaXplKCJUaGUgbm8tcmVhY3Rpdml0eSBhc3N1bXB0aW9uIGhhcyBiZWVuIHJlbGF4ZWQgaW4gdGhlIGxhdGVzdCB2ZXJzaW9uIG9mIFJTaWVuYSIsICJyZWQiKWBdOiBUaGUgYWN0IG9mIHJlLWFmZmlybWluZywgbWFraW5nIG9yIGJyZWFraW5nIGFuIG91dGdvaW5nIHRpZSBkb2VzIG5vdCB0cmlnZ2VyIGEgcmVzcG9uc2UgYnkgdGhlIGludm9sdmVkIGFsdGVyICANCi0gTm8gc2ltdWx0YW5laXR5OiBDaGFuZ2VzIG9jY3VyIG9uZSBieSBvbmUgIA0KLSBIZW5jZSBhbHNvIG5vIGNvb3BlcmF0aW9uLCBjb29yZGluYXRpb24gb3IgbmVnb3RpYXRpb24gIA0KLSBObyBtYXhpbWl6YXRpb24gb2YgdG90YWwgdXRpbGl0eTogIA0KICAgIC0gTm8gYWx0cnVpc3RpYyBiZWhhdmlvcjogSW5kaXZpZHVhbCB1dGlsaXR5IGlzIG1heGltaXplZCwgbm90IHRvdGFsIHV0aWxpdHkgIA0KLSBObyBzdHJhdGVnaWMgYmVoYXZpb3I6ICANCiAgICAtIFZlcnkgZmluaXRlIHRpbWUgaG9yaXpvbi4gQWdlbnQgZG9lcyBub3QgcHJlZGljdCBob3cgaGlzL2hlciBmdXR1cmUgbG9jYWwgbmV0d29yayBuZWlnaGJvcmhvb2QgbWF5IGNoYW5nZSBhZnRlcjogIA0KICAgICAgICAtIE1ha2luZyBhbm90aGVyIG1pbmlzdGVwIGhpbS9oZXJzZWxmICANCiAgICAgICAgLSBBIG1pbmlzdGVwIG9mIG90aGVyIGFnZW50cw0KICAgIC0gSGVuY2UgYWxzbyBubyBpbnZlc3RtZW50cw0KDQpUaGlzIGRvZXMgbm90IG1lYW4gdGhhdCBSU2llbmEgY2Fubm90IGVzdGltYXRlIChvciBiZXR0ZXI6ICdmaXQnKSB0aGUgZXZvbHV0aW9uIG9mIG5ldHdvcmtzL2JlaGF2aW9yIHRoYXQgYXJlIHRoZSBjb25zZXF1ZW5jZXMgb2YgdGhlc2UgbW9yZSBjb21wbGV4ICdydWxlcycgb3IgbWljcm8gdGhlb3JpZXMgYnV0IGl0IGFzc3VtZXMgYWN0b3JzIG9ubHkgbWFrZSBtaW5pc3RlcHMuICANCg0KDQoNCiMjIFNpbXVsYXRpb24gTG9naWMNCg0KMS4gU2FtcGxlIGVnbyAgDQoyLiBDb25zdHJ1Y3QgcG9zc2libGUgYWx0ZXJuYXRpdmUgZnV0dXJlIG5ldHdvcmtzIGJhc2VkIG9uIGFsbCBwb3NzaWJsZSBtaW5pc3RlcHMgb2YgZWdvICAgIA0KMy4gQ2FsY3VsYXRlIGhvdyBzYW1wbGVkIGVnbyBldmFsdWF0ZXMgdGhlc2UgcG9zc2libGUgbmV0d29ya3MgIA0KNC4gTGV0IHRoZSBlZ28gcGljayBhIG5ldHdvcmssIHRoYXQgaXMsIGxldCBhZ2VudCBkZWNpZGUgb24gYSB0aWUtY2hhbmdlICANCjUuIEdPVE8gMSAoU1RPUFBJTkcgUlVMRTogdW50aWwgd2UgaGF2ZSBtYWRlIGVub3VnaCBtaW5pc3RlcHMpDQoNCiMjIyBTYW1wbGUgYW4gZWdvICANCg0KTGV0IHVzIGZpcnN0IHN0YXJ0IHdpdGggYSBuZXR3b3JrLiBXZSB3aWxsIHVzZSB0aGUgYnVpbGQgaW4gbmV0d29yayBvZiBgUnNpZW5hVHdvU3RlcGAuIA0KDQojIyMjIG5ldDENCg0KQWRqYWNlbmN5IG1hdHJpeA0KDQpgYGB7ciwgZWNobz1GQUxTRSwgZXZhbD1UUlVFfQ0KdHNfbmV0MSA8LSB0c19uZXQxDQpgYGANCg0KDQpgYGB7ciB9DQp0c19uZXQxDQpgYGANCg0KIyMjIyBQbG90IHRzX25ldDENCg0KYGBge3IsIG1lc3NhZ2U9RkFMU0UsIHdhcm5pbmc9RkFMU0UsIGZpZy53aWR0aD03LCBmaWcuaGVpZ2h0PTUsIGZpZy5jYXA9InRzX25ldDEifQ0KbmV0MWcgPC0gZ3JhcGhfZnJvbV9hZGphY2VuY3lfbWF0cml4KHRzX25ldDEsIG1vZGU9ImRpcmVjdGVkIikNCmNvb3JkcyA8LSBsYXlvdXRfKG5ldDFnLCBuaWNlbHkoKSkgI2xldCB1cyBrZWVwIHRoZSBsYXlvdXQNCnBhcihtYXI9YyguMSwgLjEsIC4xLCAuMSkpDQp7cGxvdC5pZ3JhcGgobmV0MWcsIGxheW91dD1jb29yZHMpDQpncmFwaGljczo6Ym94KCkNCn0NCmBgYA0KDQoNClNvIG9ubHkgb25lIGFjdG9yIGlzIGFsbG93ZWQgdG8gbWFrZSBvbmUgbWluaXN0ZXAuIEJ1dCB3aG8/IFRoaXMgaXMgZGV0ZXJtaW5lZCBieSB0aGUgc28tY2FsbGVkICoqcmF0ZSBmdW5jdGlvbioqIGFuZCBpdCBtYXkgZGVwZW5kIG9uIGVnby1jaGFyYWN0ZXJpc3RpY3Mgb2Ygb3VyIHNvY2lhbCBhZ2VudHMgKGUuZy4gbWFsZS9mZW1hbGUpIGFuZC9vciBvbiBzdHJ1Y3R1cmFsLWNoYXJhY3RlcmlzdGljcyBvZiBvdXIgc29jaWFsIGFnZW50cyAoZS5nLiBpbmRlZ3JlZSwgb3V0ZGVncmVlKS4gQW5kIGFsbCB0aGlzIGNhbiBiZSBlc3RpbWF0ZWQgd2l0aGluIFJTaWVuYS4gRm9yIHRoaXMgY291cnNlIGluIFJTaWVuYSBpdCB3b3VsZCBnbyB3YXkgdG9vIGZhciB0byBleHBsYWluIGluIGRldGFpbCB0aGUgcmF0ZSBmdW5jdGlvbi4gSXQgaXMgYWxzbyBub3QgdGhhdCBpbXBvcnRhbnQuIE1vcmUgb2Z0ZW4gdGhhbiBub3RlLCB3ZSBzaW1wbHkgYXNzdW1lIHRoYXQgYWxsIGFjdG9ycyBoYXZlIGFuIGVxdWFsIGNoYW5jZSBvZiBiZWluZyBzZWxlY3RlZCB0byBtYWtlIGEgbWluaXN0ZXAuICANCg0KRm9yIG1vcmUgaW5mb3JtYXRpb24gb24gdGhlIHJhdGUgZnVuY3Rpb24gc2VlIFtoZXJlXShodHRwczovL3d3dy5qb2NoZW10b2xzbWEubmwvY291cnNlcy9jb21wbGV0ZS1uZXR3b3Jrcy9zb2NpbzYvKS4gDQoNCiMjIyMgc2VsZWN0IGFnZW50DQoNCk9rYXksIHdlIGNhbiB0aHVzIHJhbmRvbWx5IHNlbGVjdCBhbiBhZ2VudC4gDQoNCmBgYHtyfQ0Kc2V0LnNlZWQoMjQ1NTMyNTMpDQplZ28gPC0gdHNfc2VsZWN0KG5ldD10c19uZXQxKSANCmVnbw0KYGBgDQoNCg0KIyMjIFBvc3NpYmxlIG5ldHdvcmtzIGFmdGVyIG1pbmlzdGVwICANCg0KTGV0IHVzIHN1cHBvc2Ugd2Ugd2FudCB0byBrbm93IHdoYXQgdGhlIHBvc3NpYmxlIG5ldHdvcmtzIGFyZSBhZnRlciBhbGwgcG9zc2libGUgbWluaXN0ZXBzIG9mIGBlZ29gIHdobyBpcyBwYXJ0IG9mIGB0c19uZXQxYC4gVGhhdCBpcywgbGV0IHVzIGFzc3VtZSB0aGF0IGl0IGlzIGVnbydzIHR1cm4gKGVnbyM6IGByIGVnb2ApIHRvIGRlY2lkZSBvbiB0aWUtY2hhbmdlLiBXaGF0IGFyZSB0aGUgcG9zc2libGUgbmV0d29ya3M/IA0KDQpUaGUgZnVuY3Rpb24gYHRzX2FsdGVybmF0aXZlc19taW5pc3RlcCgpYCByZXR1cm5zIGEgbGlzdCBvZiBhbGwgcG9zc2libGUgbmV0d29ya3MgYWZ0ZXIgYWxsIHBvc3NpYmxlIHRpZS1jaGFuZ2VzIGF2YWlsYWJsZSB0byBhbiBlZ28gZ2l2ZW4gdGhlIGN1cnJlbnQgc3RhdGUgb2YgYSBuZXR3b3JrLg0KDQpgYGB7ciwgcmVzdWx0cz0naGlkZSd9DQpvcHRpb25zIDwtIHRzX2FsdGVybmF0aXZlc19taW5pc3RlcChuZXQ9dHNfbmV0MSwgZWdvPWVnbykNCm9wdGlvbnMNCnBsb3RzIDwtIGxhcHBseShvcHRpb25zLCBncmFwaF9mcm9tX2FkamFjZW5jeV9tYXRyaXgsIG1vZGU9ImRpcmVjdGVkIikNCnBhcihtYXI9YygwLDAsMCwwKSsuMSkNCnBhcihtZnJvdz1jKDIsMikpDQoNCmZwbG90IDwtIGZ1bmN0aW9uKHgpIHsNCiAgcGxvdC5pZ3JhcGgoeCwgbGF5b3V0PWNvb3JkcywgbWFyZ2luPTApDQogIGdyYXBoaWNzOjpib3goKQ0KfQ0KDQpsYXBwbHkocGxvdHMsIGZwbG90KSANCmBgYA0KDQoNCg0KIyMjIE5ldHdvcmsgc3RhdGlzdGljcyANCg0KV2hpY2ggb3B0aW9uIChvciBtaW5pc3RlcCkgd2lsbCBlZ28gY2hvb3NlPyBOYXR1cmFsbHkgdGhpcyB3aWxsIGRlcGVuZCBvbiB3aGljaCBuZXR3b3JrIGNoYXJhY3RlcmlzdGljcyAob3Igc28tY2FsbGVkIHN0YXRpc3RpY3MpIGVnbyBmaW5kcyByZWxldmFudC4gTGV0IHVzIHN1cHBvc2UgdGhhdCBlZ28gYmFzZXMgaXRzIGRlY2lzaW9uIHNvbGVseSBvbiB0aGUgbnVtYmVyIG9mIHRpZXMgaXQgc2VuZHMgdG8gb3RoZXJzIGFuZCB0aGUgbnVtYmVyIG9mIHJlY2lwcm9jYXRlZCB0aWVzIGl0IGhhcyB3aXRoIG90aGVycy4gDQoNCkxldCB1cyBjb3VudCB0aGUgbnVtYmVyIG9mIHRpZXMgZWdvIHNlbmRzIHRvIGFsdGVycy4gDQoNCmBgYHtyfQ0KdHNfZGVncmVlKG5ldD1vcHRpb25zW1sxXV0sIGVnbz1lZ28pDQpgYGANCg0Kb3IgZm9yIGFsbCBvcHRpb25zDQpgYGB7cn0NCnNhcHBseShvcHRpb25zLCB0c19kZWdyZWUsIGVnbz1lZ28pDQpgYGANCg0KQW5kIGxldCB1cyBjb3VudCB0aGUgbnVtYmVyIG9mIHJlY2lwcm9jYXRlZCB0aWVzDQoNCmBgYHtyfQ0Kc2FwcGx5KG9wdGlvbnMsIHRzX3JlY2lwLCBlZ289ZWdvKQ0KYGBgDQo+ICoqQXNzaWdtZW50IDE6KiogIA0KPiAxYTogd3JpdGUgYSBmdW5jdGlvbiB0aGF0IGNvdW50cyB0aGUgbnVtYmVyIG9mIHRyYW5zaXRpdmUgdHJpYWRzIGZvciBvdXIgZWdvICANCj4gMWI6IHdyaXRlIGEgZnVuY3Rpb24gdGhhdCBjb3VudHMgZm9yIGFsbCBlZ28ncyB0aGUgdHJhbnNpdGl2ZSB0cmlhZHMgYW5kIHN1bXMgdGhlIHJlc3VsdCAgDQoNCg0KSW4gdGhlIHBhY2thZ2UgYFJzaWVuYVR3b1N0ZXBgIHRoZXJlIGFyZSBmdW5jdGlvbnMgZm9yIHRoZSBmb2xsb3dpbmcgbmV0d29yayBzdGF0aXN0aWNzICRzJDogDQoNCiAgLSBkZWdyZWU6IGB0c19kZWdyZWUoKWAgDQogIC0gcmVjaXByb2NpdHk6IGB0c19yZWNpcCgpYCAgDQogIC0gb3V0ZGVncmVlIGFjdGl2aXR5OiBgdHNfb3V0QWN0KClgIA0KICAtIGluZGVncmVlIGFjdGl2aXR5OiBgdHNfaW5BY3QoKWAgDQogIC0gb3V0ZGVncmVlIHBvcHVsYXJpdHk6IGB0c19vdXRQb3AoKWAgDQogIC0gaW5kZWdyZWUgcG9wdWxhcml0eTogYHRzX2luUG9wKClgICANCiAgLSB0cmFuc2l0aXZpdHk6IGB0c190cmFuc1RyaXAoKWAgDQogIC0gbWVkaWF0ZWQgdHJhbnNpdGl2aXR5OiBgdHNfdHJhbnNNZWRUcmlwKClgICANCiAgLSB0cmFuc2l0aXZlIHJlY2lwcm9jYXRlZCB0cmlwbGV0czogYHRzX3RyYW5zUmVjVHJpcCgpYCANCiAgLSBudW1iZXIgb2YgdGhyZWUtY3ljbGVzOiBgdHNfY3ljbGUzKClgICANCg0KUGxlYXNlIHNlZSBgP3RzX2RlZ3JlZSgpYC4gDQoNCmByIGNvbG9yaXplKCJVcGRhdGU6IHRoZXJlIGFyZSBxdWl0ZSBhIGxvdCBtb3JlLiBCdXQgbm90IHZlcnkgcmVsZXZhbnQgZm9yIHVzIGF0IHRoaXMgdGltZS4iLCAicmVkIilgICANCg0KU2VlIEByaXBsZXkyMDIybWFudWFsIChDaGFwdGVyIDEyKSBmb3IgdGhlIG1hdGhlbWF0aWNhbCBmb3JtdWxhdGlvbi4gTmF0dXJhbGx5LCB5b3UgYXJlIGZyZWUgdG8gZGVmaW5lIHlvdXIgb3duIG5ldHdvcmsgc3RhdGlzdGljcy4gDQoNCiMjIyBFdmFsdWF0aW9uIGZ1bmN0aW9uIA0KDQpCdXQgd2hhdCBldmFsdWF0aW9uIHZhbHVlIGRvZXMgZWdvIGF0dGFjaCB0byB0aGVzZSBuZXR3b3JrIHN0YXRpc3RpY3MgYW5kIGNvbnNlcXVlbnRseSB0byB0aGUgbmV0d29yayAoaW4gaXRzIHZpY2luaXR5KSBhcyBhIHdob2xlPyBXZWxsIHRoZXNlIGFyZSB0aGUgcGFyYW1ldGVycywgJFxiZXRhJCwgeW91IHdpbGwgbm9ybWFsbHkgZXN0aW1hdGUgd2l0aCBgUlNpZW5hOjpzaWVuYTA3KClgLiANCkxldCB1cyBzdXBwb3NlIHRoZSBpbXBvcnRhbmNlIGZvcjogIA0KDQotIHRoZSBzdGF0aXN0aWMgJ2RlZ3JlZScgaXMgLTEgIA0KLSBmb3IgdGhlIHN0YXRpc3RpYyAncmVjaXByb2NpdHknIGlzIDEuNS4gDQoNClNvIHlvdSBjb3VsZCBjYWxjdWxhdGUgdGhlIGV2YWx1YXRpb24gb2YgdGhlIG5ldHdvcmsgc2F2ZWQgaW4gYG9wdGlvbnNbWzRdXWAgYnkgaGFuZDogDQoNCiQkZl57ZXZhbH1fe259KFxtYXRoYmZ7c197aX19LFxtYXRoYmZ7XGJldGF9KSA9IFxtYXRoYmZ7c19pfV5cbWF0aHNme1R9XG1hdGhiZntcYmV0YX0sICQkICANCndpdGggJGZee2V2YWx9X3tufSQgdGhlIGV2YWx1YXRpb24gZnVuY3Rpb24gZm9yIGFnZW50ICRuJC4gJFxtYXRoYmZ7c197aX19JCBhcmUgdGhlIG5ldHdvcmsgc3RhdGlzdGljcyBmb3IgbmV0d29yayAkaSQgYW5kICRcbWF0aGJme1xiZXRhfSQgdGhlIGNvcnJlc3BvbmRpbmcgcGFyYW1ldGVycyAob3IgaW1wb3J0YW5jZSkuDQoNCmBgYHtyfQ0Kb3B0aW9uIDwtIDQNCnRzX2RlZ3JlZShvcHRpb25zW1tvcHRpb25dXSwgZWdvPWVnbykqLTEgKyB0c19yZWNpcChvcHRpb25zW1tvcHRpb25dXSwgZWdvPWVnbykqMS41DQpgYGANCg0KT3IgeW91IGNvdWxkIHVzZSB0aGUgYHRzX2V2YWwoKWAuIA0KDQpgYGB7cn0NCmV2YWwgPC0gdHNfZXZhbChuZXQ9b3B0aW9uc1tbb3B0aW9uXV0sIGVnbz1lZ28sIHN0YXRpc3RpY3M9bGlzdCh0c19kZWdyZWUsIHRzX3JlY2lwKSwgcGFyYW1ldGVycz1jKC0xLDEuNSkpDQpldmFsDQpgYGANCk5vdywgbGV0IHVzIGNhbGN1bGF0ZSB0aGUgZXZhbHVhdGlvbiBvZiBhbGwgcG9zc2libGUgbmV0d29ya3M6IA0KYGBge3IgdDEsIHJlc3VsdHM9J2hvbGQnfQ0KZXZhbCA8LSBzYXBwbHkob3B0aW9ucywgRlVOPXRzX2V2YWwsIGVnbz1lZ28sIHN0YXRpc3RpY3M9bGlzdCh0c19kZWdyZWUsIHRzX3JlY2lwKSwgcGFyYW1ldGVycz1jKC0xLDEuNSkpDQpldmFsDQpwcmludCgibmV0d29yayB3aXRoIG1heGltdW0gZXZhbHVhdGlvbiBzY29yZToiKQ0Kd2hpY2gubWF4KGV2YWwpDQpgYGANCg0KIyMjIENob2ljZSBmdW5jdGlvbiANCg0KU28gd2hpY2ggb3B0aW9uIHdpbGwgZWdvIGNob29zZT8gTmF0dXJhbGx5IHRoaXMgd2lsbCBiZSBhIHN0b2NoYXN0aWMgcHJvY2Vzcy4gQnV0IHdlIHNlZSB0aGF0IG9wdGlvbiBgciB3aGljaC5tYXgoZXZhbClgIGhhcyB0aGUgaGlnaGVzdCBldmFsdWF0aW9uLiANCldlIHVzZSBNY0ZhZGRlbidzIGNob2ljZSBmdW5jdGlvbiAoZm9yIG1vcmUgaW5mb3JtYXRpb24gc2VlIFt3aWtpXShodHRwczovL2VuLndpa2lwZWRpYS5vcmcvd2lraS9EaXNjcmV0ZV9jaG9pY2UpKSwgdGhhdCBpcyBsZXQgJFBfe25pfSQgYmUgdGhlIHByb2JhYmlsaXR5IHRoYXQgZWdvICRuJCBjaG9vc2VzIG5ldHdvcmsvYWx0ZXJuYXRpdmUgJGkkLiBUaGUgY2hvaWNlIGZ1bmN0aW9uIGlzIHRoZW4gZ2l2ZW4gYnk6ICANCg0KDQokJFBfe24saX0gPSBcZnJhY3tleHAoXG1hdGhiZntzX2l9XlxtYXRoc2Z7VH1cbWF0aGJme1xiZXRhfSApfXtcU2lnbWFfe2o9MX1eSiBleHAoXG1hdGhiZntzX2p9XlxtYXRoc2Z7VH1cbWF0aGJme1xiZXRhfSApfSwkJCAgDQoNCndpdGggJHNfaSQgYSB2ZWN0b3Igb2YgdGhlIHZhbHVlIG9mIGVhY2ggbmV0d29yayBzdGF0aXN0aWNzIGZvciBuZXR3b3JrICRpJCBhbmQgJFxiZXRhJCBpcyB0aGUgdmVjdG9yIG9mIHBhcmFtZXRlciB2YWx1ZXMuIEhlbmNlLCAkXG1hdGhiZntzX2l9XlxtYXRoc2Z7VH1cbWF0aGJme1xiZXRhfSQgaXMgdGhlIHZhbHVlIG9mIHRoZSBldmFsdWF0aW9uIGZvciBuZXR3b3JrICRpJC4NCg0KTGV0IHVzIGZvcmNlIGVnbyB0byBtYWtlIGEgZGVjaXNpb24uIA0KDQpgYGB7ciwgcmVzdWx0cz0naG9sZCd9DQpjaG9pY2UgPC0gc2FtcGxlKDE6bGVuZ3RoKGV2YWwpLCBzaXplPTEsIHByb2I9ZXhwKGV2YWwpL3N1bShleHAoZXZhbCkpKQ0KcHJpbnQoImNob2ljZToiKSANCmNob2ljZQ0KI3ByaW50KCJuZXR3b3JrOiIpDQojb3B0aW9uc1tbY2hvaWNlXV0NCmBgYA0KDQpJZiB3ZSByZXBlYXQgdGhpcyBwcm9jZXNzLCB0aGF0IGlzLi4uOiANCg0KMS4gc2FtcGxlIGFnZW50ICANCjIuIGNvbnN0cnVjdCBwb3NzaWJsZSBhbHRlcm5hdGl2ZSBuZXR3b3JrcyAgDQozLiBjYWxjdWxhdGUgaG93IHNhbXBsZWQgYWdlbnQgZXZhbHVhdGVzIHRoZSBwb3NzaWJsZSBuZXR3b3JrcyAgDQo0LiBMZXQgdGhlIGFnZW50IHBpY2sgYSBuZXR3b3JrLCB0aGF0IGlzLCBsZXQgYWdlbnQgZGVjaWRlIG9uIGEgdGllLWNoYW5nZSAgDQo1LiBHTyBCQUNLIFRPIDEgKFNUT1BQSU5HIFJVTEU6IHVudGlsIHlvdSB0aGluayB3ZSBoYXZlIG1hZGUgZW5vdWdoIG1pbmlzdGVwcykNCg0KLi4ud2UgaGF2ZSBhbiBhZ2VudCBiYXNlZCBtb2RlbC4gICANCg0KDQojIyMjIEludGVycHJldGF0aW9uIG9mIHBhcmFtZXRlcnMgIA0KDQpBbHRob3VnaCB3ZSBoYXZlIG5vdCB5ZXQgZXN0aW1hdGVkIGFuIFJTaWVuYSBtb2RlbCwgdGhpcyBpcyBhbHJlYWR5IHRoZSB0aW1lIHRvIGV4cGxhaW4gdGhlIGludGVycHJldGF0aW9uIG9mIHRoZSBlc3RpbWF0ZWQgcGFyYW1ldGVycy4gDQpTdXBwb3NlIHRoYXQgeW91IHdhbnQgdG8gaW50ZXJwcmV0IHRoZSBlc3RpbWF0ZWQgcGFyYW1ldGVyIGZvciB0aGUgZGVncmVlIHN0YXRpc3RpYy4gDQoNCkhhdmUgYSBsb29rIGF0IHRoZSBwb3NzaWJsZSBvcHRpb25zIG91ciBlZ28gaGFzLiBDYW4geW91IGZpbmQgdHdvIG5ldHdvcmtzIHRoYXQgb25seSBkaWZmZXIgd2l0aCByZXNwZWN0IHRvIHRoZSBudW1iZXIgb2YgdGllcywgYW5kIG1vcmUgcHJlY2lzZWx5IG9ubHkgd2l0aCByZXNwZWN0IHRvIDEgKHNlbmRpbmcpIHRpZT8gDQoNCkZvciBleGFtcGxlLCBPcHRpb24gMSwgaGFzIG9uZSBtb3JlIHNlbmRpbmcgdGllIHRoYW4gb3B0aW9uIDQuIA0KDQpXaGF0IGlzIHRoZSBwcm9iYWJpbGl0eSByYXRpbz86IA0KDQokJCBcZnJhY3tQX3tuLGk9MX19e1Bfe24saT00fX0sJCQgIA0KDQpZb3Ugd2lsbCBzZWUgdGhhdCB0aGUgZGVub21pbmF0b3IgY2FuY2VscyBvdXQuIFRodXM6IA0KDQokJCBcZnJhY3tQX3tuLGk9MX19e1Bfe24saT00fX0gPSBcZnJhY3tleHAoXG1hdGhiZntzX3tpPTF9fV5cbWF0aHNme1R9XG1hdGhiZntcYmV0YX0gKX17ZXhwKFxtYXRoYmZ7c197aT00fX1eXG1hdGhzZntUfVxtYXRoYmZ7XGJldGF9ICl9ID0gZXhwKFxtYXRoYmZ7c197aT0xfX1eXG1hdGhzZntUfVxtYXRoYmZ7XGJldGF9IC0gXG1hdGhiZntzX3tpPTR9fV5cbWF0aHNme1R9XG1hdGhiZntcYmV0YX0pID0gZXhwKHtcYmV0YV97ZGVncmVlfX0pICwkJCAgDQphbmQgdGh1czogIA0KDQokJCBsb2coXGZyYWN7UF97bixpPTF9fXtQX3tuLGk9NH19KSA9IHtcYmV0YX0gLCQkIA0KLi4udGhlIGxvZyBwcm9iYWJpbGl0eSByYXRpbyB0aGF0IGFuIGVnbyB3aWxsIGNob29zZSBhIG5ldHdvcmsgd2l0aCBvbmUgYWRkaXRpb25hbCBzZW5kaW5nIHRpZSBvdmVyIGEgbmV0d29yayB3aXRob3V0IGFuIGFkZGl0aW9uYWwgc2VuZGluZyB0aWUgaXMgcHJlY2lzZWx5IG91ciBzdGF0aXN0aWMgcGFyYW1ldGVyICR7XGJldGF9JC4gDQoNCkhvcGVmdWxseSB5b3Ugc2VlIHRoZSBpbnRlcnByZXRhdGlvbiBzaW1pbGFyaXR5IHdpdGggYSBzdGFuZGFyZCAobXVsdGlub21pYWwpIGxvZ2l0IG1vZGVsLiANCg0KIyMjIFN0b3BwaW5nIHJ1bGUgIA0KDQpCdXQgaG93IG1hbnkgbWluaXN0ZXBzIGRvIHdlIGFsbG93PyBXZWxsLCBub3JtYWxseSB0aGlzIGlzIGVzdGltYXRlZCBieSBgc2llbmEwN2AgYnkgdGhlIGByYXRlYCBwYXJhbWV0ZXIuXltub3RlcmF0ZTogTmF0dXJhbGx5LCBpdCBpcyBhIGJpdCBtb3JlIGNvbXBsaWNhdGVkIHRoYW4gdGhhdC4gSW4gUlNpZW5hIHdlIGhhdmUgYSBjaG9pY2UgYmV0d2VlbiB1bmNvbmRpdGlvbmFsIGFuZCBjb25kaXRpb25hbCBlc3RpbWF0aW9uLiBNeSBkZXNjcmlwdGlvbiBvZiB0aGUgc3RvcHBpbmcgcnVsZSByZWZlcnMgdG8gdGhlIHVuY29uZGl0aW9uYWwgZXN0aW1hdGlvbi5dIElmIHdlIGRvIG5vdCBtYWtlIHRoaXMgcmF0ZSBwYXJhbWV0ZXIgY29uZGl0aW9uYWwgb24gYWN0b3IgY292YXJpYXRlcyBvciBvbiBuZXR3b3JrIGNoYXJhY3RlcmlzdGljcywgdGhlIHJhdGUgcGFyYW1ldGVyIGNhbiBiZSBpbnRlcnByZXRlZCBhcyB0aGUgYXZlcmFnZSBudW1iZXIgb2YgbWluaXN0ZXBzIGVhY2ggYWN0b3IgaW4gdGhlIG5ldHdvcmsgaXMgYWxsb3dlZCB0byBtYWtlIGJlZm9yZSB0aW1lIGlzIHVwLiBMZXQgdXMgc3VwcG9zZSB0aGUgYHJhdGVgIHBhcmFtZXRlciBpcyAyIGByIHJhdGU8LTJgLiBUaHVzIGluIHRvdGFsIHRoZSBudW1iZXIgb2YgcG9zc2libGUgbWluaXN0ZXBzIHdpbGwgYmUgYG5yb3cobmV0MSkqcmF0ZWA6IGByIG5yb3codHNfbmV0MSkqcmF0ZWAuIEZvciBhIG1vcmUgZGV0YWlsZWQgLSAqKmFuZCBtb3JlIGNvcnJlY3QqKiAtICBpbnRlcnByZXRhdGlvbiBvZiB0aGUgcmF0ZSBwYXJhbWV0ZXIgaW4gYHNpZW5hMDdgIHNlZTogW3d3dy5qb2NoZW10b2xzbWEubmxdKHd3dy5qb2NoZW10b2xzbWEubmwvY291cnNlcy9jb21wbGV0ZS1uZXR3b3Jrcy9zb2NpbzYpLg0KDQojIyBTaW11bGF0aW9uIGV4YW1wbGUgIA0KDQpMZXQgdXMgbm93IHNpbXVsYXRlIGhvdyB0aGUgbmV0d29yayAqKmNvdWxkKiogZXZvbHZlIGdpdmVuOl5bSXQgaXMgYWxzbyBwb3NzaWJsZSB0byBzaW11bGF0ZSBuZXR3b3JrcyB3aXRoaW4gdGhlIGBSU2llbmFgIHBhY2thZ2UgaXRzZWxmLiBCdXQgbGV0IHVzIHN0aWNrIHdpdGggZnVuY3Rpb25zIGZyb20gYFJzaWVuYVR3b1N0ZXBgIGZvciBub3cuXSAgDQoNCi0gc3RhcnRpbmcgcG9pbnQgaXMgYHRzX25ldDFgIA0KLSByYXRlIGlzIHNldCB0byAyICANCi0gd2UgYXMgc2NpZW50aXN0cyB0aGluayBvbmx5IG5ldHdvcmsgc3RhdGlzdGljcyBkZWdyZWUgYW5kIHJlY2lwcm9jaXR5IGFyZSBpbXBvcnRhbnQgIA0KLSBgUlNpZW5hOjpzaWVuYTA3YCBoYXMgZGV0ZXJtaW5lZCB0aGUgcGFyYW1ldGVycyBmb3IgdGhlc2Ugc3RhdGlzdGljcyBhcmUgLTEgYW5kIDEuNSByZXNwZWN0aXZlbHkgIA0KDQpgYGB7ciB0ZXN0LCBlY2hvPUZBTFNFLCBldmFsPVRSVUV9DQpkYXRhKHRzX25ldDEpDQp0c19uZXQxDQpgYGANCg0KYGBge3J9DQpzaW1uZXQyIDwtIHRzX3NpbSgNCiAgICAgICAgbmV0MT10c19uZXQxLCAjdGhpcyBpcyBvdXIgc3RhcnQgbmV0d3dvcmsNCiAgICAgICAgc3RhdGlzdGljcz1saXN0KHRzX2RlZ3JlZSwgdHNfcmVjaXApLCAjd2Ugb25seSBpbmNsdWRlIHRvIHN0YXRpc3RpY3MNCiAgICAgICAgc3RhcnR2YWx1ZXMgPSBjKDIsLTEsMS41KSkgIyB0aGUgc3RhcnQgdmFsdWVzIGZvciBvdXIgcmF0ZSBwYXJhbWV0ZXIgKGF1dG9tYXRpY2FsbHkgaW5jbHVkZWQpLCBhbmQgb3VyIHR3byBzdGF0aXN0aWNzDQoNCnNpbW5ldDINCmBgYA0KDQo+ICoqQXNzaWdubWVudCAyOioqICANCj4gMmE6IFVzZSB0aGUgc2FtZSBzdGFydGluZyB2YWx1ZXMgYW5kIG1ha2UgMTAgc2ltdWxhdGlvbiBydW5zIChzYXZlIHJlc3VsdHMgaW4gYSBsaXN0IG9yIHNvbWV0aGluZykuIEhpbnQsIHlvdSBtYXkgd2FudCB0byB1c2UgYHRzX3NpbXMoKWAgIA0KPiAyYjogdHdlYWsgdGhlIHN0YXJ0aW5nIHZhbHVlcyAoYSBjb3VwbGUgb2YgdGltZXMpIGFuZCBmb3IgZWFjaCBwYXJhbWV0ZXIgY29uZmlndXJhdGlvbiBtYWtlIDEwIHNpbXVsYXRpb24gcnVucyAob25jZSBhZ2FpbiBzYXZlIHlvdXIgcmVzdWx0cykNCj4gMmM6IGZvciBlYWNoIG9mIHRoZSBzaW11bGF0ZWQgbmV0d29ya3MgY2FsY3VsYXRlIHRvIHRvdGFsIG51bWJlciBvZiB0aWVzIGFuZCB0aGUgdG90YWwgbnVtYmVyIHJlY2lwcm9jYXRlZCB0aWVzICANCj4gMmQ6IFdoYXQgZGlkIHlvdSBsZWFybiBmcm9tIHRoaXMgZXhlcmNpc2U/IA0KDQoNCiMgRXN0aW1hdGlvbiBsb2dpYyAgDQoNClNvIG5vdyB5b3UgaGF2ZSBzb21lIGdyYXNwIG9mIHRoZSBsb2dpYyBvZiBSU2llbmEuIEJ1dCBob3cgZG9lcyB0aGUgZXN0aW1hdGlvbiB3b3JrPyAgDQoNCldlbGwsIHRoYXQgaXMgcXVpdGUgY29tcGxpY2F0ZWQuIEJ1dCBpdCBnb2VzIHNvbWV0aGluZyBsaWtlIHRoaXM6XlsnaXQnIHJlZmVycyB0byBlc3RpbWF0aW9uIHZpYSB0aGUgJ01ldGhvZCBvZiBNb21lbnRzJ10gDQoNCjEuIERlZmluZSBtb2RlbDogcmVzZWFyY2hlciBpbmNsdWRlcyBlZmZlY3RzICANCjIuIGluaXRpYWwgcGFyYW1ldGVyIHZhbHVlcyBvZiBlZmZlY3RzIChjb21tb25seSAnMCcpICANCjMuIHNpbXVsYXRlIGFuIG91dGNvbWUgbmV0d29yayBiYXNlZCBvbiB0aGVzZSBwYXJhbWV0ZXIgdmFsdWVzICANCjQuIGNvbXBhcmUgdGhlIG5ldHdvcmsgc3RhdGlzdGljcyBvZiB0aGUgc2ltdWxhdGVkIG91dGNvbWUgbmV0d29yayB3aXRoIHRoZSBvYnNlcnZlZCBvdXRjb21lIG5ldHdvcmsgKGkuZS4gdGhlICp0YXJnZXQgdmFsdWVzKikgIA0KICAgIC0gYmFzZWQgb24gdGhlIGluY2x1ZGVkIGVmZmVjdHMuIFRodXMgdGhlIHNpbXVsYXRlZCBuZXR3b3JrIG1heSBjb250YWluIDEwIHRpZXMsIGJ1dCB0aGUgb2JzZXJ2ZWQgbmV0d29yayBtYXkgY29udGFpbiAyMCB0aWVzLiBBcHBhcmVudGx5LCB3aXRoIHRoZSBjdXJyZW50IHBhcmFtZXRlciB2YWx1ZXMgd2UgdW5kZXJlc3RpbWF0ZSB0aGUgZGVuc2l0eS9kZWdyZWUgb2YgdGhlIG91dGNvbWUgbmV0d29yayBhbmQgd2UgbWF5IHdpc2ggdG8gaW5jcmVhc2UgdGhlIHBhcmFtZXRlciBvZiBvdXIgZGVuc2l0eSBwYXJhbWV0ZXIuICANCjUuIHR3ZWFrL3VwZGF0ZSBwYXJhbWV0ZXIgdmFsdWVzIGluIHNvbWUgc21hcnQgd2F5ICANCjYuIEdPVE8gMyAoQlJFQUsgUlVMRTogdW50aWwgcGFyYW1ldGVyIHZhbHVlcyBjYW5ub3QgYmUgaW1wcm92ZWQgYW55bW9yZSAvIG9yIHJlYWNoZWQgZ29vZCBmaXQpICANCjcuIHNpbXVsYXRlIGEgYnVuY2ggb2Ygb3V0Y29tZSBuZXR3b3JrcyB3aXRoIHRoZSBvYnRhaW5lZCBwYXJhbWV0ZXIgdmFsdWVzIGFuZCBjb21wYXJlIHRoZSAqZXhwZWN0ZWQgdmFsdWVzKiBvZiBzdGF0aXN0aWNzIG9mIHRoZSBvdXRjb21lIG5ldHdvcmtzIHdpdGggdGhlICp0YXJnZXQgdmFsdWVzKi4gIA0KICAgIC0gd2UgY2FuIGFzc2VzcyB0aGUgZml0ICANCiAgICAtIGVzdGltYXRlIFNFIG9mIHRoZSBwYXJhbWV0ZXJzDQoNCg0KPiAqKkV4ZXJjaXNlIDM6KiogIA0KPiBMZXQgdXMgc3RhcnQgcGxheWluZyB3aXRoIHRoZSBidWlsZC1pbiBkYXRhc2V0cyBvZiBgUlNpZW5hYDogYHM1MDFgIGFuZCBgczUwMmAuICANCj4gUGljayB0aHJlZSBzdGF0aXN0aWNzIHRoYXQgeW91IHRoaW5rIHdpbGwgYmUgcmVsZXZhbnQgaW4gZXN0aW1hdGluZyB0aGUgbmV0d29yayBldm9sdXRpb24gZm9yIHRoZXNlIGRhdGFzZXRzLg0KPiAzYS4gRm9yIGVhY2ggb2YgdGhlIGFib3ZlIHN0YXRpc3RpY3MsIGRlZmluZSB0aGUgdGFyZ2V0IHZhbHVlcyBhbmQgcHJvZ3JhbSBhIGZ1bmN0aW9uIHRoYXQgY2FsY3VsYXRlcyB0aGUgdGFyZ2V0IHZhbHVlcy4gDQo+IDNiLiBIb3cgd291bGQgeW91IHBpY2sgc21hcnQgc3RhcnRpbmcgdmFsdWVzIGZvciB0aGUgcmF0ZSBhbmQgZGVncmVlIHBhcmFtZXRlcnM/ICANCj4gM2MuIERvIDEwIGNvbnNlY3V0aXZlIHNpbXVsYXRpb24gcnVucy4gQWZ0ZXIgZWFjaCBydW4geW91IHR3ZWFrIHlvdXIgcGFyYW1ldGVycz8gIA0KPiBEaWQgeW91IGdldCBjbG9zZSB0byB5b3VyIHRhcmdldCB2YWx1ZXM/ICANCg0KU29tZSBoaW50czogIA0KDQpDYWxjdWxhdGluZyB0YXJnZXRzL291dGNvbWUgdmFsdWVzOiANCg0KYGBge3J9DQojY2FsY3VsYXRlIHRoZSB0YXJnZXRzDQp0c190YXJnZXRzKG5ldDEgPSBzNTAxLCBuZXQyID0gczUwMiwgc3RhdGlzdGljcyA9IGxpc3QodHNfZGVncmVlLCB0c19yZWNpcCkpDQoNCiNpZiB5b3Ugc2V0IHRoZSBhcmd1bWVudCBgbmV0MmAgdG8gYmUgZXF1YWwgdG8geW91ciBzaW11bGF0ZWQgbmV0d29yaywgeW91IGNvdW50IHRoZSB2YWx1ZXMgb2JzZXJ2ZWQgaW4geW91ciBzaW11bGF0ZWQgbmV0d29ya2AgDQoNCmBgYA0KRGVmaW5pbmcgeW91ciBvd24gc3RhdGlzdGljczogDQoNCllvdSBjYW4gbG9vayBhdCB0aGUgc291cmNlIGNvZGUgdG8gZ2V0IGluc3BpcmF0aW9uOiANCg0KYGBge3J9DQp0c190cmFuc1RyaXANCmBgYA0KDQoNCg0KLS0tLQ0KDQojIFJlZmVyZW5jZXMNCg0K</div>
+<style>
+  .center {
+    text-align: center;
+    color: red;
+  }
+</style>
+  
+  <hr>
+  <br>
+  <p class="center">Copyright &copy; 2023 Jochem Tolsma / Rob Franken / Anne Maaike Mulders / Bas Hofstra</p>
+    
+    
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("45logicRSiena.rmd");
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
