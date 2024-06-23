@@ -170,16 +170,18 @@ networkw2 <- matrix(0, nrow=nrow(df_sel), ncol=nrow(df_sel))
 
 ### select publications
 
-```{r}
+```{r, results = 'hold'}
 #wave1
 publications %>% 
   filter(gs_id %in% df_sel$gs_id) %>% 
   filter (year %in% c(2018,2019,2020))-> pub_w1
+nrow(pub_w1)
 
 #wave2
 publications %>% 
   filter(gs_id %in% df_sel$gs_id) %>% 
   filter (year %in% c(2021,2022,2023))-> pub_w2
+nrow(pub_w2)
 ```
 
 ### make a list for each publication 
@@ -200,6 +202,7 @@ pub_w1 <- str_split(pub_w1$author, ",") %>%
 #let us remove all publications with only one author
 remove <- which(sapply(pub_w1, FUN = function(x) length(x)==1 )==TRUE)
 pub_w1 <- pub_w1[-remove]
+length(pub_w1)
 
 #wave2
 pub_w2 <- str_split(pub_w2$author, ",") %>%
@@ -215,6 +218,7 @@ pub_w2 <- str_split(pub_w2$author, ",") %>%
 #let us remove all publications with only one author
 remove <- which(sapply(pub_w2, FUN = function(x) length(x)==1 )==TRUE)
 pub_w2 <- pub_w2[-remove]
+length(pub_w2)
 ```
 
 ### find the author positions  
@@ -244,6 +248,7 @@ for (ego in 1: nrow(df_sel)) {
     }
  }
 }
+
 
 pubs <- pub_w2
 

@@ -247,8 +247,13 @@ What do we learn from this file?
 This should be both empirically and theoretically motivated. 
 Most importantly, hopefully you have already thought about this step when you formulated your hypotheses and even before you constructed your data.  
 
+Let us discuss the model below. 
+What do these effects mean?  
+Why did we include these effects (and not others)? 
+
+
 ```{r, eval=TRUE}
-myeff <- includeEffects(myeff, isolateNet, inPop, outAct) #we know that quite a lot of staff has not published with someone else
+myeff <- includeEffects(myeff, isolateNet, inPop, outAct, inAct, transTrip) #we know that quite a lot of staff has not published with someone else
 myeff <- includeEffects(myeff, sameX, egoX, altX, interaction1 = "gender")
 ```
 What structural effects would we normally want to include? 
@@ -269,7 +274,7 @@ fsave(ans)
 ```
 
 ```{r, echo=FALSE}
-ans <- fload("./data/processed/20230623ans.rda")
+ans <- fload("./data/processed/20240623ans.rda")
 ```
 
 
@@ -375,6 +380,10 @@ gofo0 <- sienaGOF(ans, OutdegreeDistribution, verbose=FALSE, join=TRUE,
      levls=c(0:10,15,20),varName="net")
 gof0.gd <- sienaGOF(ans, GeodesicDistribution, cumulative=FALSE,
      verbose=FALSE, join=TRUE, varName="net")
+gof0.tc <- sienaGOF(ans, TriadCensus, 
+     verbose=FALSE, join=TRUE, varName="net")
+
+
 #?sienaGOF
 ```
 
@@ -397,6 +406,12 @@ plot(gofo0)
 ```{r}
 plot(gof0.gd)
 ```
+#### triad census  
+
+```{r}
+plot(gof0.tc, center=TRUE, scale=TRUE)
+```
+
 
 ### {.unlisted .unnumbered}
 

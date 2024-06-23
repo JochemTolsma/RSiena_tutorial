@@ -364,7 +364,7 @@ Hopefully you see the interpretation similarity with a standard (multinomial) lo
 
 ### Stopping rule  
 
-But how many ministeps do we allow? Well, normally this is estimated by `siena07` by the `rate` parameter.^[noterate: Naturally, it is a bit more complicated than that. In RSiena we have a choice between unconditional and conditional estimation. My description of the stopping rule refers to the unconditional estimation.] If we do not make this rate parameter conditional on actor covariates or on network characteristics, the rate parameter can be interpreted as the average number of ministeps each actor in the network is allowed to make before time is up. Let us suppose the `rate` parameter is 2 `r rate<-2`. Thus in total the number of possible ministeps will be `nrow(net1)*rate`: `r nrow(ts_net1)*rate`. For a more detailed - **and more correct** -  interpretation of the rate parameter in `siena07` see: [www.jochemtolsma.nl](www.jochemtolsma.nl/courses/complete-networks/socio6).
+But how many ministeps do we allow? Well, normally this is estimated by `siena07` by the `rate` parameter.^[: Naturally, it is a bit more complicated than that. In RSiena we have a choice between unconditional and conditional estimation. My description of the stopping rule refers to the unconditional estimation.] If we do not make this rate parameter conditional on actor covariates or on network characteristics, the rate parameter can be interpreted as the average number of ministeps each actor in the network is allowed to make before time is up. Let us suppose the `rate` parameter is 2 `r rate<-2`. Thus in total the number of possible ministeps will be `nrow(net1)*rate`: `r nrow(ts_net1)*rate`. For a more detailed - **and more correct** -  interpretation of the rate parameter in `siena07` see: [www.jochemtolsma.nl](www.jochemtolsma.nl/courses/complete-networks/socio6).
 
 ## Simulation example  
 
@@ -416,10 +416,10 @@ Well, that is quite complicated. But it goes something like this:^['it' refers t
 
 > **Exercise 3:**  
 > Let us start playing with the build-in datasets of `RSiena`: `s501` and `s502`.  
-> Pick three statistics that you think will be relevant in estimating the network evolution for these datasets.
-> 3a. For each of the above statistics, define the target values and program a function that calculates the target values. 
-> 3b. How would you pick smart starting values for the rate and degree parameters?  
-> 3c. Do 10 consecutive simulation runs. After each run you tweak your parameters?  
+> Pick three statistics that you think will be relevant in estimating the network evolution for these datasets.  
+> 3a. For each of the above statistics, define the target values and program a function that calculates the target values.   
+> 3b. How would you pick smart starting values for the rate and degree parameters?    
+> 3c. Do 10 consecutive simulation runs. After each run you tweak your parameters?    
 > Did you get close to your target values?  
 
 Some hints:  

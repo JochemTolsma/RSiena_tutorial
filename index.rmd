@@ -51,11 +51,11 @@ function myFunction() {
           
 </script>
 ```
-Welcome to the website of the Sunbelt 2024 Workshop: **RSiena**
+Welcome to the website of the Sunbelt 2024 Workshop: **Analyzing the Structure and Evolution of Scientific Co-publishing Networks with RSiena**
 
 <br>
 
-TEXT HERE
+
 
 <!--
 
