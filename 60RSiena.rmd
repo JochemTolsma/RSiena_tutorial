@@ -296,7 +296,8 @@ ans
 
 Here, scripts are shown that can be used to present violin plots representing how well the simulations of our SIENA models capture the distribution of features of the dependent variable(s) (i.e., networks and 'behavior') that were not directly modeled, but for which a good fit between model and data is desirable. 
 
-Background reading: Lospinoso & Snijders [(-@Lospinoso2019)].
+Background reading: Lospinoso & Snijders [-@Lospinoso2019]
+
 
 ### Background
 
@@ -378,8 +379,7 @@ Goodness-of-fit tests based on various auxiliary statistics:
 ```{r}
 gofi0 <- sienaGOF(ans, IndegreeDistribution, verbose=FALSE, join=TRUE,
      varName="net")
-gofo0 <- sienaGOF(ans, OutdegreeDistribution, verbose=FALSE, join=TRUE,
-     levls=c(0:10,15,20),varName="net")
+gofo0 <- sienaGOF(ans, OutdegreeDistribution, verbose=FALSE, join=TRUE,varName="net")
 gof0.gd <- sienaGOF(ans, GeodesicDistribution, cumulative=FALSE,
      verbose=FALSE, join=TRUE, varName="net")
 gof0.tc <- sienaGOF(ans, TriadCensus, 
@@ -408,6 +408,7 @@ plot(gofo0)
 ```{r}
 plot(gof0.gd)
 ```
+
 #### triad census  
 
 ```{r}
@@ -422,7 +423,7 @@ plot(gof0.tc, center=TRUE, scale=TRUE)
 
 Here, scripts are shown that can be used to calculate the expected relative importance of our effects.
 
-Background reading: Indlekofer & Brander [(-@indlekofer2013)].
+Background reading: Indlekofer & Brandes [-@indlekofer2013] 
 
 ### Background
 
@@ -497,12 +498,15 @@ The bar charts display the relative impacts of effects of our model on individua
 
 To gain a better understanding of how consequential our (selection) effects of interest at the micro-level are for social network properties at the macro-level, we can use our estimated SAOMs as empirically calibrated agent-based simulation models.
 
-Background reading: Snijders & Steglich [(-@steglich2015)].
+Background reading: Snijders & Steglich [-@steglich2015].
 
-We have our empirically estimated model (`ans`). We set initial effects values of our simulation models based on our empirically estimated model (`ans`) and we fix the effects at these values. We specify 2 additional models:
+We set initial effects values of our simulation models based on our empirically estimated model (`ans`) and we fix the effects at these values. We specify 2 additional models:
 
 - no indegree-popularity (inPop) model
 - stronger indegree-popularity (inPop) model
+
+Our macro- / network outcome of interest is the skewness of the in-degree distribution. We measure this through the Gini index. We will extract the Gini for the in-degrees from each simulation run.
+
 
 ```{r}
 #make new effects objects for simulation models
@@ -550,12 +554,10 @@ sim_model <- sienaAlgorithmCreate(
     seed=242452, # seed for replication
     simOnly = TRUE)
 
-#macro-/network-outcome of interest: skewness of the degree distribution (measured through gini)
 
-#we will extract the gini for the in-degrees from the simulation runs
 #make vector to store gini across models (observed, no inPop, high inPop)
 #we also make vectors to calculate gini excluding the in-isolates
-  
+
 gini_obs <- gini_no <- gini_high <- gini_obs2 <- gini_no2 <- gini_high2 <- rep(0, nIter)
 
 # simulation using estimated parameters
@@ -586,7 +588,12 @@ for (i in 1:nIter) {
   
   #shorter notation for edge list for iteration i
   edges <- sim_ans_obs$sims[[i]][[1]][[1]][[1]]
-  #put edge values in desired place
+
+  #The numbering is as follows: first the number of the simulation run (i); then the number of the group (1 in the usual case of single-group data structures); then the number of the dependent variable (here 1, because it is supposed that there only is a dependent network); then the period number (i.e., wave number minus 1). 
+  
+  #str(sim_ans_high$sims[[i]])
+  
+    #put edge values in desired place
   adj[edges[, 1:2]] <- edges[, 3]
   
   #count number of indegrees
@@ -622,6 +629,7 @@ for (i in 1:nIter) {
   
   #shorter notation for edge list for iteration i
   edges <- sim_ans_high$sims[[i]][[1]][[1]][[1]]
+  
   #put edge values in desired place
   adj[edges[, 1:2]] <- edges[, 3]
   
@@ -659,8 +667,6 @@ p2 <- ggplot(plotdata2, aes(x = condition, y = gini)) +
   theme_minimal()
 
 ggpubr::ggarrange(p1,p2, align = "h", labels = c("all actors", "excl. in-isolates"), vjust = 3)
-
-?ggarrange
 ``` 
 
 
